@@ -1,4 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 .active {
-  border-bottom: 2px solid blue;
+  border-bottom: 1px solid blue;
+
+}
+
+.menu-link {
+
 }

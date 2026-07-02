@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { Home } from './features/home/home';
 import PageNotFound from './features/page-not-found/page-not-found';
+import { UserNewForm } from './features/users/user-new-form/user-new-form';
 
 
 export const routes: Routes = [
@@ -10,16 +11,12 @@ export const routes: Routes = [
   { path: 'home', component: Home },
   // Rutas con LazyLoad (Carga Perezosa)
   {
-    path: 'brochure',
-    loadComponent: () => import( './features/brochure/brochure' ).then( m => m.Brochure )
+    path: 'user-new',
+    loadComponent: () => import( './features/users/user-new-form/user-new-form' ).then( m => m.UserNewForm)
   },
   {
-    path: 'about-us',
-    loadComponent: () => import( './features/about-us/about-us' ).then( m => m.AboutUs )
-  },
-  {
-    path: 'contact',
-    loadComponent: () => import( './features/contact/contact' ).then( m => m.Contact )
+    path: 'user/list',
+    loadComponent: () => import( './features/users/user-list/user-list' ).then( m => m.UserList)
   },
   // Para importar la ruta sin resolver la Promesa usando then/catch, se debe poner exportar la clase como default (ver PageNotFound.ts)
   {

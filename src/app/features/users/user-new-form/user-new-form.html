@@ -1,0 +1,55 @@
+<div class="page page-user">
+  <h2 class="title title-form title-user-form">Registrar usuarios</h2>
+
+  <p>Por favor diligencie todos los campos del formulario</p>
+
+  <form [formGroup]="formData" (ngSubmit)="onSubmit()" class="form form-user">
+
+    <div class="field">
+      <label for="user-name">User name</label>
+      <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez">
+    </div>
+    <div class="field">
+      <label for="user-nickname">Nickname</label>
+      <input formControlName="nickname" id="user-nickname" type="text" placeholder="Ej: Manu">
+    </div>
+    <div class="field">
+      <label for="user-email">E-mail</label>
+      <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
+    </div>
+    <div class="field">
+      <label for="user-password">Password</label>
+      <input formControlName="password" type="user-password" placeholder="Ej: 123456789">
+    </div>
+    <div class="field">
+      <label for="user-status">User status</label>
+      <div class="options">
+        <input id="user-status-enable" formControlName="status" type="radio"><label for="user-status-enable">Enable</label>
+        <input id="user-status-disable" formControlName="status" type="radio"><label for="user-status-disable">Disable</label>
+      </div>
+    </div>
+    <div class="field">
+      <label for="user-role">Roles</label>
+      <select formControlName="role" id="user-role">
+        <option value="">Select..</option>
+        <option value="administrator">Admin</option>
+        <option value="editor">Editor</option>
+        <option value="author">Author</option>
+        <option value="contributor">Contributor</option>
+        <option value="subscriber">Subscriber</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="user-avatar">Url Avatar</label>
+      <!-- <input id="user-avatar" type="file"> -->
+      <input formControlName="avatar" id="user-avatar" type="text" placeholder="http://www.dominio.co/images/your-avatar.png">
+    </div>
+    <div class="field">
+      <button>Register user</button>
+    </div>
+
+  </form>
+
+  <form action="input.php"></form>
+
+</div>
