@@ -1,0 +1,94 @@
+<div class="page page-product">
+
+  <h2>Register Product</h2>
+
+  <pre class="pre">{{ categoryList$ | async | json }}</pre>
+
+  <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()">
+
+    <div class="field">
+      <label for="product-refcode">Ref Code</label>
+      <input type="text" formControlName="referenceCode" id="product-refcode">
+      <small class="error">
+        @if ( referenceCode?.invalid && ( referenceCode?.dirty || referenceCode?.touched ) ) {
+
+          @if( referenceCode?.errors?.[ 'required' ] ) {
+            La referencia del producto es obligatoria
+          }
+
+        }
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="product-name">Product Name</label>
+      <input type="text" formControlName="name" id="product-name">
+      <small class="error">
+        @if ( name?.invalid && ( name?.dirty || name?.touched ) ) {
+
+          @if( name?.errors?.[ 'required' ] ) {
+            El nombre del producto es obligatorio
+          }
+
+          @if( name?.errors?.[ 'minlength' ] ) {
+            El nombre del producto debe tener al menos 3
+          }
+
+        }
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="product-description">Description</label>
+      <textarea formControlName="description" id="product-description"></textarea>
+      <small class="error">Mensaje de error</small>
+    </div>
+
+    <div class="field">
+      <label for="product-price">Price</label>
+      <input type="number" formControlName="price" id="product-price">
+      <small class="error">Mensaje de error</small>
+    </div>
+
+    <div class="field">
+      <label for="product-stock">Stock</label>
+      <input type="number" formControlName="stock" id="product-stock">
+      <small class="error">Mensaje de error</small>
+    </div>
+
+    <div class="field">
+      <label for="product-category">Category</label>
+      <select formControlName="category" id="product-category">
+
+        <option value="">Select...</option>
+        <!-- TODO:Traer los datos el API (BackEnd) para renderizalas dinamicamente -->
+        @for (category of ( categoryList$ | async ); track $index) {
+          <option [value]="category._id">{{ category.name }}</option>
+        }
+
+      </select>
+      <small class="error">Mensaje de error</small>
+    </div>
+
+    <div class="field">
+      <label for="">Status</label>
+
+      <div class="options">
+
+        <input [value]="true" type="radio" formControlName="status" id="product-status-enable">
+        <label for="product-status-enable">Enable</label>
+
+        <input [value]="false" type="radio" formControlName="status" id="product-status-disable">
+        <label for="product-status-disable">Disable</label>
+
+      </div>
+      <small class="error">Mensaje de error</small>
+
+    </div>
+    <div class="field">
+      <button type="submit" [disabled]="formData.invalid">Register Product</button>
+    </div>
+
+  </form>
+
+</div>

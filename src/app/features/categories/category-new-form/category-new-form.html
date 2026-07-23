@@ -1,0 +1,58 @@
+<div class="page page-category">
+
+  <h2>Register Category</h2>
+
+  <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()">
+
+    <div class="field">
+      <label for="category-name">Category Name</label>
+      <input type="text" formControlName="name" id="category-name">
+      <small class="error">
+        @if( name?.invalid && ( name?.dirty || name?.touched ) ) {
+
+          <!-- Validators.required -->
+          @if ( name?.errors?.[ 'required' ] ) {
+            El nombre de la categoria es obligatorio
+          }
+
+          <!-- Validators.minLength( 5 ) -->
+          @if ( name?.errors?.[ 'minlength' ]  ) {
+            El nombre de la categoria debe tener al menos 5 caracteres
+          }
+
+        }
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="category-description">Description</label>
+      <textarea formControlName="description" id="category-description"></textarea>
+      <small class="error"></small>
+    </div>
+
+    <div class="field">
+      <label for="category-url-image">URL Image</label>
+      <input type="text" formControlName="urlImage" id="category-url-image">
+      <small class="error"></small>
+    </div>
+
+    <div class="field">
+      <label for="">Status</label>
+
+      <div class="options">
+        <input [value]="true" type="radio" formControlName="status" id="category-status-enable">
+        <label for="category-status-enable">Enable</label>
+
+        <input [value]="false" type="radio" formControlName="status" id="category-status-desable">
+        <label for="category-status-desable">Disable</label>
+      </div>
+      <small class="error"></small>
+    </div>
+
+    <div class="field">
+      <button type="submit" [disabled]="formData.invalid">Register Category</button>
+    </div>
+
+  </form>
+
+</div>

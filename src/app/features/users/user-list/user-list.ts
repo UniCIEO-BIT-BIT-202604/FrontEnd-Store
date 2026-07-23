@@ -1,29 +1,114 @@
 import { Component, inject } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { Router, RouterLink } from "@angular/router";
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+import Swal from 'sweetalert2';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCoffee, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
+
 import { HttpUsers } from '../../../core/services/http-users';
 
 @Component({
   selector: 'app-user-list',
-  imports: [],
+  imports: [AsyncPipe, JsonPipe, RouterLink, FontAwesomeModule],
   templateUrl: './user-list.html',
   styleUrl: './user-list.css',
 })
-export class UserList {
+export default class UserList {
+  // Atributos de iconos con Fontawesome
+  faCoffee = faCoffee;
+  faPen = faPen;
+  faLinkedin = faLinkedin;
 
+  // Atributos de la logica del componente
+  subscriberUser!: Subscription;    // ! Pase por alto que 'subscriberUser' sea definido como un valor undefined
+  subscriberDeleteUser!: Subscription;
+  public userList$ = new BehaviorSubject<any>([]);
 
-  // Inyectar una dependencia
   private httpUsers = inject( HttpUsers );
+  private router = inject( Router );
 
-  // Hook del ciclo de vida de un compomente en Angular (Cuando se inicializa el componente)
+  // Hook: Saber cuando se inicializa el componente
   ngOnInit() {
-    // Invocando la funcionalidad del Servicio - Obtiene todos los usuarios
-    this.httpUsers.getUsers().subscribe({
-      next: ( users ) => {
-        console.log( 'componente', users );
-        // this.users = data;      // Asignando los datos obtenidos del Servicio al atributo publico para mostrarlo en el HTML componente
+    this.loadUsers();
+  }
+
+  ngOnDestroy () {
+    // Verifico si existe una subscripción activa y la desubscribo
+    if ( this.subscriberUser ) {
+      this.subscriberUser.unsubscribe();
+    }
+    if( this.subscriberDeleteUser ) {
+      this.subscriberDeleteUser.unsubscribe();
+    }
+  }
+
+  private loadUsers() {
+    // Realizar la peticion de los datos de la API para que sean obtenidos antes que el componente cargue (visualmente)
+    // Guarda la subscripcion al Observable para tener control del mismo
+    this.subscriberUser = this.httpUsers.getUsers().subscribe({
+      next: ( data ) => {
+        console.log( data );
+        // Asignar la lista de usuarios al observable
+        this.userList$.next( data.data );   // Solo la lista de los usuarios
       },
       error: ( err ) => {
         console.error( err );
+      } ,
+      complete: () => {
+        console.log( 'Lista todos los usuarios' );
       }
+    });
+  }
+
+  onEdit( id: string ) {
+    console.log( 'Edit', id );
+    // Redirecciona
+    // this.router.navigateByUrl( `/user/edit/${id}` )
+    this.router.navigate([ '/user', 'edit', id ]);
+  }
+
+  onDelete( id: string ) {
+
+    // Implementa la ventana emergente con SweetAlert2
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+
+        // console.log( 'Delete', id );
+        // Guarda la subscripcion al Observable para tener control del mismo
+        this.subscriberDeleteUser = this.httpUsers.deleteUserById( id ).subscribe({
+          next: ( data ) => {
+            console.log( data );
+            this.loadUsers();      // Ejecutar
+          },
+          error: ( err ) => {
+            console.error( err );
+          },
+          complete: () => {
+            console.log( 'Peticion al API para eliminar usuario por ID' );
+          }
+        });
+    }
+
+
+
     });
   }
 }

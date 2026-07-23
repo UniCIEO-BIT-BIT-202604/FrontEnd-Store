@@ -1,9 +1,117 @@
 /* You can add global styles to this file, and also import other style files */
 .active {
   border-bottom: 1px solid blue;
-
 }
 
-.menu-link {
+/* Color del boton cuando esa deshabilitado */
+.btn-form {
+  background-color: #4736a5;
+  color: white;
+  border-radius: .3rem;
+  padding: .6rem 1.2rem;
+}
+/* Color cuando el boton esta habilitado */
+.btn-disabled {
+  background-color: #7c72b2;;
+}
 
+.error {
+  color: red;
+  font-style: italic;
+  font-size: .75rem;
+  height: 1rem;
+}
+
+/* Forms */
+.form {
+  border: 2px solid blue;
+  width: 60%;
+  margin: 0 auto;
+
+  .field {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-flow: column;
+
+    input, label {
+      width: 98%;
+    }
+
+    select {
+      width: 100%;
+    }
+
+    .options {
+      display: flex;
+    }
+  }
+}
+
+/* Data JSON: Verificar traida de datos */
+.pre {
+  background-color: darkgreen;
+  color: white;
+  display: none;
+}
+
+/* Tables */
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+/* Tables: Avatars */
+.category-image {
+  width: 3rem;
+  border-radius: .7rem;
+}
+
+/* Tables: Buttons */
+.options {
+  display: flex;
+  gap: .4rem;
+}
+
+.description {
+  display: flex;
+  margin: .5rem;
+  justify-content: right;
+  align-items: center;
+}
+
+.btn {
+  padding: .3rem;
+}
+
+.btn-new {
+  background: #765df1;
+  color: white;
+  border: 1px solid #765df1;
+  border-radius: .3rem;
+}
+
+.btn-edit {
+  background: #399339;
+  color: white;
+  border: 1px solid #399339;
+  border-radius: .3rem;
+}
+
+.btn-delete {
+  background: #e34c4c;
+  color: white;
+  border: 1px solid #e34c4c;
+  border-radius: .3rem;
 }

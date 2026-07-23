@@ -1,22 +1,36 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { map, tap } from 'rxjs';
-import { ResponseUsers } from '../models/Users';
+import { environment } from '../../../environments/environment';
 
 @Service()
 export class HttpUsers {
   // Inyectar una dependencia
   private http = inject( HttpClient );
 
-  // Metodo para realizar una peticion a mi API donde obtengo la lista de usuarios
+  BASE_URL: string = environment.apiUrl;
+  createUser() {}
+
   getUsers() {
-    return this.http.get<ResponseUsers>( 'http://localhost:3000/api/users' ).pipe(
-      tap( ( res ) => console.log( 'tap', res ) ),
-      map( ( res ) => {
-        console.log( 'map',res.data );
-        return res.data;
-      } )
-    );
+    // Observable (HttpClient)
+    return this.http.get<any>( `${ this.BASE_URL }/users` )
   }
+
+  getUserById( id: string | null ) {
+    // Observable (HttpClient)
+    return this.http.get<any>( `${ this.BASE_URL }/users/${ id }` );
+  }
+
+  deleteUserById( id: string | null ) {
+    // Observable (HttpClient)
+    return this.http.delete( `${ this.BASE_URL }/users/${ id }` );
+  }
+
+  updateUserById( id: string | null, updatedUser: any ) {
+    // Observable (HttpClient)
+    return this.http.patch( `${ this.BASE_URL }/users/${ id }`, updatedUser );
+  }
+
 }
+
+
 

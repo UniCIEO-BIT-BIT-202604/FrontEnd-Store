@@ -1,9 +1,13 @@
 <div class="page page-user">
-  <h2 class="title title-form title-user-form">Register usuarios</h2>
+  <h2 class="title title-form title-user-form">Editusuarios</h2>
 
-  <pre>{{ roleList$ | async | json }}</pre>
+  <pre>ID {{ selectedId }}</pre>
+
+  <pre class="pre">{{ roleList$ | async | json }}</pre>
 
   <p>Por favor diligencie todos los campos del formulario</p>
+
+  <a routerLink="/user/list">Return User List</a>
 
   <form
     [formGroup]="formData"
@@ -64,7 +68,11 @@
       <input formControlName="avatar" id="user-avatar" type="text" placeholder="http://www.dominio.co/images/your-avatar.png">
     </div>
     <div class="field">
-      <button>Register user</button>
+      <button
+        class="btn-form"
+        [disabled]="formData.invalid"
+        [class.btn-disabled]="formData.invalid"
+      >Edit user</button>
     </div>
 
   </form>

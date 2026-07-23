@@ -1,0 +1,51 @@
+<div class="page page-category">
+
+  <h2>Category List</h2>
+
+  <pre>{{ categoryList$ | async | json }}</pre>
+
+  <div class="option">
+    <a routerLink="/category/new">New Category</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Category Name</th>
+        <th>Contact</th>
+        <th>Country</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      @for ( category of ( categoryList$ | async ); track $index ) {
+        <tr>
+          <td>
+            <img class="category-image" [src]="category.urlImage" [alt]="category.name" [title]="category.name">
+          </td>
+          <td>{{ category.name }}</td>
+          <td>
+            <hugeicons-icon
+              [icon]="notificationIcon"
+              [size]="24"
+              color="currentColor"
+              [strokeWidth]="1.5"
+            ></hugeicons-icon>
+
+            <hugeicons-icon
+              [icon]="badgeXIcon"
+              [size]="24"
+              color="currentColor"
+              [strokeWidth]="1.5"
+            ></hugeicons-icon>
+          </td>
+          <td>Germany</td>
+        </tr>
+      }
+
+    </tbody>
+    <tfoot></tfoot>
+</table>
+
+</div>
