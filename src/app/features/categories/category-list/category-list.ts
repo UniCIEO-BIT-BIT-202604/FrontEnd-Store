@@ -6,7 +6,7 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
 
 // (--1--) Importamos la libreria de icinos de Hugeicons
 import { HugeiconsIconComponent } from '@hugeicons/angular';
-import { BadgeXIcon, Notification03Icon } from '@hugeicons/core-free-icons';
+import { ToggleOffIcon, ToggleOnIcon } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-category-list',
@@ -18,8 +18,8 @@ export default class CategoryList {
   categoryList$ = new BehaviorSubject<any>([]);
 
   // (--3--) Definen el atributo publico que desplegara el icono
-  notificationIcon = Notification03Icon;
-  badgeXIcon = BadgeXIcon;
+  ToggleOffIcon = ToggleOffIcon;
+  ToggleOnIcon = ToggleOnIcon;
 
   // (0) Siempre inyectar la dependencia
   private httpCategory = inject( HttpCategory );

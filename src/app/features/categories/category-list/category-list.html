@@ -13,8 +13,8 @@
       <tr>
         <th>Image</th>
         <th>Category Name</th>
-        <th>Contact</th>
-        <th>Country</th>
+        <th>Status</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -26,21 +26,31 @@
           </td>
           <td>{{ category.name }}</td>
           <td>
-            <hugeicons-icon
-              [icon]="notificationIcon"
-              [size]="24"
-              color="currentColor"
-              [strokeWidth]="1.5"
-            ></hugeicons-icon>
-
-            <hugeicons-icon
-              [icon]="badgeXIcon"
-              [size]="24"
-              color="currentColor"
-              [strokeWidth]="1.5"
-            ></hugeicons-icon>
+            @if( category.status ) {
+              <hugeicons-icon
+                class="toggle-icon toggle-on-icon"
+                [icon]="ToggleOnIcon"
+                [size]="32"
+                color="currentColor"
+                [strokeWidth]="1.5"
+              ></hugeicons-icon>
+            }
+            @else {
+              <hugeicons-icon
+                class="toggle-icon toggle-off-icon"
+                [icon]="ToggleOffIcon"
+                [size]="32"
+                color="currentColor"
+                [strokeWidth]="1.5"
+              ></hugeicons-icon>
+            }
           </td>
-          <td>Germany</td>
+          <td>
+            <div class="options">
+              <a href="#">Edit</a>
+              <a href="#">Delete</a>
+            </div>
+          </td>
         </tr>
       }
 

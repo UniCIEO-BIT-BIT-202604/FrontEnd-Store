@@ -72,6 +72,17 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+/* Tables: Status */
+.toggle-icon {
+  width: 100%;
+}
+.toggle-on-icon {
+  color: green;
+}
+.toggle-off-icon {
+  color: gray;
+}
+
 /* Tables: Avatars */
 .category-image {
   width: 3rem;
