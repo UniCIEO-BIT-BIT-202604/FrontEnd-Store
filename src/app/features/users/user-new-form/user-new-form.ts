@@ -23,7 +23,7 @@ export default class UserNewForm {
   selectedFile: File | null = null;   // Propiedad para almacenar el archivo seleccionado (si el usuario decide subir uno)
 
   constructor() {
-    // Define la estructura equivalente del formulario en HTML
+    // Define la estructura equivalente del formulario en HTML incluyendo el validador de coincidencia de claves
     this.formData = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
       nickname: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
@@ -32,7 +32,17 @@ export default class UserNewForm {
       confirmPassword: new FormControl('', [Validators.required]),
       status: new FormControl(true),
       role: new FormControl('subscriber', [Validators.required])
-    });
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  /**
+   * Validador personalizado a nivel de FormGroup para verificar que la contraseña y su confirmación sean idénticas
+   */
+  private passwordMatchValidator(group: any) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   // Hook: Permite realizar tareas cuando el componente se esta inicializado
@@ -84,19 +94,13 @@ export default class UserNewForm {
       return;   // Detiene la ejecución del método onSubmit
     }
 
-    // 1. Convertir automáticamente todas las propiedades del FormGroup a FormData
+    // 1. Extraer confirmPassword separándolo mediante destructuración para enviarle al BackEnd únicamente las propiedades esperadas por la base de datos
+    const { confirmPassword, ...userPayload } = this.formData.value;
+
     const payload = new FormData();
 
-    // Podriamos hacerlo campo a campo
-    // payload.append('name', this.formData.get('name')?.value);
-    // payload.append('nickname', this.formData.get('nickname')?.value);
-    // payload.append('email', this.formData.get('email')?.value);
-    // payload.append('password', this.formData.get('password')?.value);
-    // payload.append('status', this.formData.get('status')?.value);
-    // payload.append('role', this.formData.get('role')?.value);
-
-    // Pero mejor iteramos y hacemos dicha asignacion
-    Object.entries(this.formData.value).forEach(([key, value]) => {
+    // Iterar únicamente las propiedades del usuario excluyendo confirmPassword
+    Object.entries(userPayload).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
         payload.append(key, value as any);
       }

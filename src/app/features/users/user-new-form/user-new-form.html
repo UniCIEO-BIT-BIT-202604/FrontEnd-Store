@@ -26,6 +26,9 @@
     <div class="field">
       <label for="user-confirm-password">Confirm Password</label>
       <input formControlName="confirmPassword" id="user-confirm-password" type="password" placeholder="Ej: 123456789">
+      @if (formData.hasError('passwordMismatch') && formData.get('confirmPassword')?.touched) {
+        <small class="error">Las contraseñas no coinciden</small>
+      }
     </div>
     <div class="field">
       <label for="user-status">User status</label>
