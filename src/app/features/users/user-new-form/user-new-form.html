@@ -10,26 +10,63 @@
     <div class="field">
       <label for="user-name">User name</label>
       <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez">
+      @if (formData.get('name')?.invalid && formData.get('name')?.touched) {
+        @if (formData.get('name')?.errors?.['required']) {
+          <small class="error">El nombre es obligatorio</small>
+        } @else if (formData.get('name')?.errors?.['minlength']) {
+          <small class="error">El nombre debe tener al menos 2 caracteres</small>
+        } @else if (formData.get('name')?.errors?.['maxlength']) {
+          <small class="error">El nombre no puede superar 50 caracteres</small>
+        }
+      }
     </div>
+
     <div class="field">
       <label for="user-nickname">Nickname</label>
       <input formControlName="nickname" id="user-nickname" type="text" placeholder="Ej: Manu">
+      @if (formData.get('nickname')?.invalid && formData.get('nickname')?.touched) {
+        @if (formData.get('nickname')?.errors?.['required']) {
+          <small class="error">El nickname es obligatorio</small>
+        } @else if (formData.get('nickname')?.errors?.['minlength']) {
+          <small class="error">El nickname debe tener al menos 3 caracteres</small>
+        } @else if (formData.get('nickname')?.errors?.['maxlength']) {
+          <small class="error">El nickname no puede superar 20 caracteres</small>
+        }
+      }
     </div>
+
     <div class="field">
       <label for="user-email">E-mail</label>
       <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
+      @if (formData.get('email')?.invalid && formData.get('email')?.touched) {
+        @if (formData.get('email')?.errors?.['required']) {
+          <small class="error">El correo electrónico es obligatorio</small>
+        } @else if (formData.get('email')?.errors?.['email']) {
+          <small class="error">Por favor ingresa un correo electrónico válido</small>
+        }
+      }
     </div>
+
     <div class="field">
       <label for="user-password">Password</label>
       <input formControlName="password" id="user-password" type="password" placeholder="Ej: 123456789">
+      @if (formData.get('password')?.invalid && formData.get('password')?.touched) {
+        <small class="error">La contraseña es obligatoria</small>
+      }
     </div>
+
     <div class="field">
       <label for="user-confirm-password">Confirm Password</label>
       <input formControlName="confirmPassword" id="user-confirm-password" type="password" placeholder="Ej: 123456789">
-      @if (formData.hasError('passwordMismatch') && formData.get('confirmPassword')?.touched) {
-        <small class="error">Las contraseñas no coinciden</small>
+      @if (formData.get('confirmPassword')?.touched) {
+        @if (formData.get('confirmPassword')?.errors?.['required']) {
+          <small class="error">La confirmación de contraseña es obligatoria</small>
+        } @else if (formData.hasError('passwordMismatch')) {
+          <small class="error">Las contraseñas no coinciden</small>
+        }
       }
     </div>
+
     <div class="field">
       <label for="user-status">User status</label>
       <div class="options">
@@ -39,25 +76,18 @@
           for="user-status-disable">Disable</label>
       </div>
     </div>
+
     <div class="field">
       <label for="user-role">Roles</label>
       <select formControlName="role" id="user-role">
         <option value="">Select..</option>
-        <!--
-        [
-          { "id": "super administrator", "name": "Super Administrador"},
-          { "id": "administrator", "name": "Administrador"},
-          { "id": "editor", "name": "Editor"},
-          { "id": "author", "name": "Autor"},
-          { "id": "contributor", "name": "Contribuidor"},
-          { "id": "subscriber", "name": "Subscriptor" }
-        ]
-    -->
         @for( role of roleList$ | async; track $index ) {
-        <option [value]="role.id">{{ role.name }}</option>
+          <option [value]="role.id">{{ role.name }}</option>
         }
-
       </select>
+      @if (formData.get('role')?.invalid && formData.get('role')?.touched) {
+        <small class="error">El rol es obligatorio</small>
+      }
     </div>
     <div class="field">
       <label for="user-avatar">Url Avatar</label>
