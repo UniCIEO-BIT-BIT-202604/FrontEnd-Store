@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCoffee, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { HttpUsers } from '../../../core/services/http-users';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -22,9 +23,9 @@ export default class UserList {
 
   public userList$ = new BehaviorSubject<any>([]);
 
-  serverHostUrl: string = 'http://localhost:3000/';    // Dominio base del servidor finalizado en '/'
-  defaultAvatarUrl: string = 'uploads/avatars/default-avatar.png'; // Imagen estática por defecto en el servidor Backend
-  defaultUIAvatarAPI: string = 'https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'; // API generadora de avatares externa
+  serverHostUrl: string = environment.serverHostUrl;
+  defaultAvatarUrl: string = environment.defaultAvatarUrl;
+  defaultUIAvatarAPI: string = environment.defaultUIAvatarAPI;
 
   private httpUsers = inject(HttpUsers);
   private router = inject(Router);

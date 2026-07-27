@@ -30,7 +30,7 @@
             <img [src]="serverHostUrl + defaultAvatarUrl" [alt]="user.name" class="user-avatar-thumbnail" title="1. Imagen Estática por Defecto (Backend)">
 
             <!-- 2. Imagen generada dinámicamente desde UI-Avatars API -->
-            <img [src]="'https://ui-avatars.com/api/?name=' + user.name + '&background=0D8ABC&color=fff'" class="user-avatar-thumbnail" title="2. API UI-Avatars">
+            <img [src]="defaultUIAvatarAPI + '?name=' + user.name + '&background=0D8ABC&color=fff'" class="user-avatar-thumbnail" title="2. API UI-Avatars">
 
             <!-- 3. Icono vectorial con FontAwesome -->
             <fa-icon [icon]="faUser" size="2x" class="user-avatar-default" title="3. Icono FontAwesome" />
