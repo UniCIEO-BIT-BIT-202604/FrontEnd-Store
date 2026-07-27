@@ -10,9 +10,11 @@
   border-radius: .3rem;
   padding: .6rem 1.2rem;
 }
+
 /* Color cuando el boton esta habilitado */
 .btn-disabled {
-  background-color: #7c72b2;;
+  background-color: #7c72b2;
+  ;
 }
 
 .error {
@@ -34,7 +36,8 @@
     align-items: flex-start;
     flex-flow: column;
 
-    input, label {
+    input,
+    label {
       width: 98%;
     }
 
@@ -62,7 +65,8 @@ table {
   width: 100%;
 }
 
-td, th {
+td,
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
@@ -76,9 +80,11 @@ tr:nth-child(even) {
 .toggle-icon {
   width: 100%;
 }
+
 .toggle-on-icon {
   color: green;
 }
+
 .toggle-off-icon {
   color: gray;
 }
@@ -87,6 +93,19 @@ tr:nth-child(even) {
 .category-image {
   width: 3rem;
   border-radius: .7rem;
+}
+
+.user-avatar-thumbnail {
+  width: 3rem;
+  height: 3rem;
+  border-radius: .7rem;
+  object-fit: cover;
+}
+
+.avatar-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Tables: Buttons */

@@ -5,29 +5,37 @@ import { environment } from '../../../environments/environment';
 @Service()
 export class HttpUsers {
   // Inyectar una dependencia
-  private http = inject( HttpClient );
+  private http = inject(HttpClient);
 
-  BASE_URL: string = environment.apiUrl;
-  createUser() {}
+  BASE_URL: string = environment.apiUrl;    // Ej: http://localhost:3000/api
+
+  /**
+   * Envía la petición para registrar un nuevo usuario.
+   * Acepta un objeto FormData (con o sin archivo adjunto).
+   */
+  createUser(userData: any) {
+    // Observable (HttpClient)
+    return this.http.post<any>(`${this.BASE_URL}/users`, userData);
+  }
 
   getUsers() {
     // Observable (HttpClient)
-    return this.http.get<any>( `${ this.BASE_URL }/users` )
+    return this.http.get<any>(`${this.BASE_URL}/users`)
   }
 
-  getUserById( id: string | null ) {
+  getUserById(id: string | null) {
     // Observable (HttpClient)
-    return this.http.get<any>( `${ this.BASE_URL }/users/${ id }` );
+    return this.http.get<any>(`${this.BASE_URL}/users/${id}`);
   }
 
-  deleteUserById( id: string | null ) {
+  deleteUserById(id: string | null) {
     // Observable (HttpClient)
-    return this.http.delete( `${ this.BASE_URL }/users/${ id }` );
+    return this.http.delete(`${this.BASE_URL}/users/${id}`);
   }
 
-  updateUserById( id: string | null, updatedUser: any ) {
+  updateUserById(id: string | null, updatedUser: any) {
     // Observable (HttpClient)
-    return this.http.patch( `${ this.BASE_URL }/users/${ id }`, updatedUser );
+    return this.http.patch(`${this.BASE_URL}/users/${id}`, updatedUser);
   }
 
 }

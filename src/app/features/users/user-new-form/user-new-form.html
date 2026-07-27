@@ -5,15 +5,11 @@
 
   <p>Por favor diligencie todos los campos del formulario</p>
 
-  <form
-    [formGroup]="formData"
-    (ngSubmit)="onSubmit()"
-    class="form form-user"
-  >
+  <form [formGroup]="formData" (ngSubmit)="onSubmit()" class="form form-user">
 
     <div class="field">
       <label for="user-name">User name</label>
-      <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez" >
+      <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez">
     </div>
     <div class="field">
       <label for="user-nickname">Nickname</label>
@@ -34,15 +30,17 @@
     <div class="field">
       <label for="user-status">User status</label>
       <div class="options">
-        <input id="user-status-enable" formControlName="status" type="radio" [value]="true"><label for="user-status-enable">Enable</label>
-        <input id="user-status-disable" formControlName="status" type="radio" [value]="false"><label for="user-status-disable">Disable</label>
+        <input id="user-status-enable" formControlName="status" type="radio" [value]="true"><label
+          for="user-status-enable">Enable</label>
+        <input id="user-status-disable" formControlName="status" type="radio" [value]="false"><label
+          for="user-status-disable">Disable</label>
       </div>
     </div>
     <div class="field">
       <label for="user-role">Roles</label>
       <select formControlName="role" id="user-role">
         <option value="">Select..</option>
-    <!--
+        <!--
         [
           { "id": "super administrator", "name": "Super Administrador"},
           { "id": "administrator", "name": "Administrador"},
@@ -53,18 +51,19 @@
         ]
     -->
         @for( role of roleList$ | async; track $index ) {
-          <option [value]="role.id">{{ role.name }}</option>
+        <option [value]="role.id">{{ role.name }}</option>
         }
 
       </select>
     </div>
     <div class="field">
       <label for="user-avatar">Url Avatar</label>
-      <!-- <input id="user-avatar" type="file"> -->
-      <input formControlName="avatar" id="user-avatar" type="text" placeholder="http://www.dominio.co/images/your-avatar.png">
+      <input id="user-avatar" type="file" accept="image/png, image/jpeg, image/jpg, image/webp"
+        (change)="onFileSelected($event)">
+      <small class="help-text">Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo: 2MB.</small>
     </div>
     <div class="field">
-      <button>Register user</button>
+      <button type="submit" [disabled]="formData.invalid">Register user</button>
     </div>
 
   </form>
