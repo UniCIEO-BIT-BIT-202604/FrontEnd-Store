@@ -145,3 +145,26 @@ tr:nth-child(even) {
   border: 1px solid #e34c4c;
   border-radius: .3rem;
 }
+
+.btn-delete-avatar {
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: .3rem;
+  padding: .4rem .8rem;
+  margin-top: .4rem;
+  cursor: pointer;
+  font-size: .8rem;
+}
+
+.btn-delete-avatar:hover {
+  background: #c9302c;
+}
+
+.info-text {
+  color: #31708f;
+  font-style: italic;
+  font-size: .8rem;
+  display: block;
+  margin-top: .3rem;
+}

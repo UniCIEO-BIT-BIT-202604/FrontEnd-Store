@@ -1,40 +1,104 @@
 <div class="page page-user">
-  <h2 class="title title-form title-user-form">Editusuarios</h2>
+  <h2 class="title title-form title-user-form">Edit usuarios</h2>
 
   <pre>ID {{ selectedId }}</pre>
 
-  <pre class="pre">{{ roleList$ | async | json }}</pre>
-
   <p>Por favor diligencie todos los campos del formulario</p>
 
-  <a routerLink="/user/list">Return User List</a>
+  <a routerLink="/user/list" class="btn btn-secondary">Return User List</a>
 
-  <form
-    [formGroup]="formData"
-    (ngSubmit)="onSubmit()"
-    class="form form-user"
-  >
+  <form [formGroup]="formData" (ngSubmit)="onSubmit()" class="form form-user">
+
+    <!-- SECCIÓN DE PREVISUALIZACIÓN Y GESTIÓN DEL AVATAR -->
+    <div class="field field-avatar-preview">
+      <label>Avatar Actual y Variantes por Defecto</label>
+      <div class="avatar-cell">
+        <!-- EVALUACIÓN: Si NO tiene avatar o posee el avatar por defecto del backend -->
+        @if (!currentAvatarUrl || currentAvatarUrl === defaultAvatarUrl) {
+          <!-- 1. Imagen por defecto servida desde el backend -->
+          <img [src]="serverHostUrl + defaultAvatarUrl" [alt]="formData.get('name')?.value" class="user-avatar-thumbnail" title="1. Imagen Estática (Backend)">
+
+          <!-- 2. Imagen generada dinámicamente desde UI-Avatars API -->
+          <img [src]="defaultUIAvatarAPI + '?name=' + (formData.get('name')?.value || 'User') + '&background=0D8ABC&color=fff'" class="user-avatar-thumbnail" title="2. API UI-Avatars">
+
+          <!-- 3. Icono vectorial con FontAwesome -->
+          <fa-icon [icon]="faUser" size="2x" class="user-avatar-default" title="3. Icono FontAwesome" />
+        } @else {
+          <!-- Avatar actual guardado en el servidor -->
+          <img [src]="serverHostUrl + currentAvatarUrl" [alt]="formData.get('name')?.value" class="user-avatar-thumbnail" title="Avatar Actual">
+        }
+      </div>
+    </div>
+
+    <!-- CAMPO DE SUBIDA Y ELIMINACIÓN DE AVATAR -->
+    <div class="field">
+      <label for="user-avatar">Cambiar o Eliminar Avatar</label>
+      <input id="user-avatar" type="file" accept="image/png, image/jpeg, image/jpg, image/webp" (change)="onFileSelected($event)">
+      <small class="help-text">Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo: 2MB.</small>
+      
+      @if (currentAvatarUrl && currentAvatarUrl !== defaultAvatarUrl && !resetAvatarFlag) {
+        <button type="button" (click)="onRemoveAvatar()" class="btn btn-delete-avatar">
+          Eliminar Foto Actual y Volver a Avatar por Defecto
+        </button>
+      }
+      @if (resetAvatarFlag) {
+        <small class="info-text">Se reestablecerá el avatar al valor por defecto al guardar.</small>
+      }
+    </div>
 
     <div class="field">
       <label for="user-name">User name</label>
-      <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez" >
+      <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez">
+      @if (formData.get('name')?.invalid && formData.get('name')?.touched) {
+        @if (formData.get('name')?.errors?.['required']) {
+          <small class="error">El nombre es obligatorio</small>
+        } @else if (formData.get('name')?.errors?.['minlength']) {
+          <small class="error">El nombre debe tener al menos 2 caracteres</small>
+        } @else if (formData.get('name')?.errors?.['maxlength']) {
+          <small class="error">El nombre no puede superar 50 caracteres</small>
+        }
+      }
     </div>
+
     <div class="field">
       <label for="user-nickname">Nickname</label>
       <input formControlName="nickname" id="user-nickname" type="text" placeholder="Ej: Manu">
+      @if (formData.get('nickname')?.invalid && formData.get('nickname')?.touched) {
+        @if (formData.get('nickname')?.errors?.['required']) {
+          <small class="error">El nickname es obligatorio</small>
+        } @else if (formData.get('nickname')?.errors?.['minlength']) {
+          <small class="error">El nickname debe tener al menos 3 caracteres</small>
+        } @else if (formData.get('nickname')?.errors?.['maxlength']) {
+          <small class="error">El nickname no puede superar 20 caracteres</small>
+        }
+      }
     </div>
+
     <div class="field">
       <label for="user-email">E-mail</label>
       <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
+      @if (formData.get('email')?.invalid && formData.get('email')?.touched) {
+        @if (formData.get('email')?.errors?.['required']) {
+          <small class="error">El correo electrónico es obligatorio</small>
+        } @else if (formData.get('email')?.errors?.['email']) {
+          <small class="error">Por favor ingresa un correo electrónico válido</small>
+        }
+      }
     </div>
+
     <div class="field">
-      <label for="user-password">Password</label>
-      <input formControlName="password" id="user-password" type="password" placeholder="Ej: 123456789">
+      <label for="user-password">New Password (Opcional)</label>
+      <input formControlName="password" id="user-password" type="password" placeholder="Déjalo en blanco para mantener la contraseña actual">
     </div>
+
     <div class="field">
-      <label for="user-confirm-password">Confirm Password</label>
-      <input formControlName="confirmPassword" id="user-confirm-password" type="password" placeholder="Ej: 123456789">
+      <label for="user-confirm-password">Confirm New Password</label>
+      <input formControlName="confirmPassword" id="user-confirm-password" type="password" placeholder="Confirma únicamente si vas a cambiar la contraseña">
+      @if (formData.hasError('passwordMismatch') && formData.get('confirmPassword')?.touched) {
+        <small class="error">Las contraseñas no coinciden</small>
+      }
     </div>
+
     <div class="field">
       <label for="user-status">User status</label>
       <div class="options">
@@ -42,39 +106,23 @@
         <input id="user-status-disable" formControlName="status" type="radio" [value]="false"><label for="user-status-disable">Disable</label>
       </div>
     </div>
+
     <div class="field">
       <label for="user-role">Roles</label>
       <select formControlName="role" id="user-role">
         <option value="">Select..</option>
-    <!--
-        [
-          { "id": "super administrator", "name": "Super Administrador"},
-          { "id": "administrator", "name": "Administrador"},
-          { "id": "editor", "name": "Editor"},
-          { "id": "author", "name": "Autor"},
-          { "id": "contributor", "name": "Contribuidor"},
-          { "id": "subscriber", "name": "Subscriptor" }
-        ]
-    -->
         @for( role of roleList$ | async; track $index ) {
           <option [value]="role.id">{{ role.name }}</option>
         }
-
       </select>
+      @if (formData.get('role')?.invalid && formData.get('role')?.touched) {
+        <small class="error">El rol es obligatorio</small>
+      }
     </div>
+
     <div class="field">
-      <label for="user-avatar">Url Avatar</label>
-      <!-- <input id="user-avatar" type="file"> -->
-      <input formControlName="avatar" id="user-avatar" type="text" placeholder="http://www.dominio.co/images/your-avatar.png">
-    </div>
-    <div class="field">
-      <button
-        class="btn-form"
-        [disabled]="formData.invalid"
-        [class.btn-disabled]="formData.invalid"
-      >Edit user</button>
+      <button class="btn-form" [disabled]="formData.invalid" [class.btn-disabled]="formData.invalid">Edit user</button>
     </div>
 
   </form>
-
 </div>
