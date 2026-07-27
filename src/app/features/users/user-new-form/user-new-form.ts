@@ -117,7 +117,7 @@ export default class UserNewForm {
       next: (response) => {
         console.log('Usuario registrado con éxito:', response);
         // Redireccionar a la lista de usuarios
-        this.router.navigate(['/users']);
+        this.router.navigate(['/user', 'list']);
       },
       error: (error) => {
         console.error('Error al registrar usuario:', error);
