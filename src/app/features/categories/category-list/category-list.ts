@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpCategory } from '../../../core/services/http-category';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
@@ -23,10 +23,14 @@ export default class CategoryList {
 
   // (0) Siempre inyectar la dependencia
   private httpCategory = inject( HttpCategory );
-
+  private router = inject( Router );
 
   // Hook: Reconoce cuando se inicializa el componente
   ngOnInit() {
+    this.onLoadData();
+  }
+
+  onLoadData() {
     // Obtener el listado de categorias usando el Servicio
     this.httpCategory.getCategories().subscribe({
       next: ( data ) => {
@@ -41,4 +45,26 @@ export default class CategoryList {
       }
     });
   }
+
+  onEdit( id: string ) {
+    console.log( 'Editar ', id );
+    this.router.navigateByUrl( `/category/edit/${id}` ); // Redireccion enviando el ID por la ruta
+  }
+
+  onDelete( id: string ) {
+    console.log( 'Eliminar', id );
+    this.httpCategory.deleteCategory( id ).subscribe({
+      next: ( res ) => {
+        console.log( res );
+        this.onLoadData();
+      },
+      error: ( err ) => {
+        console.error( err );
+      },
+      complete: () => {
+        console.log( 'Execute complete' );
+      }
+    });
+  }
+
 }

@@ -1,0 +1,46 @@
+<div class="page page-user">
+  <h2 class="title title-form title-user-form">Register usuarios</h2>
+
+  <pre class="pre">{{ roleList$ | async | json }}</pre>
+
+  <p>Por favor diligencie todos los campos del formulario</p>
+
+  <form
+    [formGroup]="formData"
+    (ngSubmit)="onSubmit()"
+    class="form form-user"
+  >
+
+    <div class="field">
+      <label for="user-name">User name</label>
+      <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez" >
+    </div>
+    <div class="field">
+      <label for="user-nickname">Nickname</label>
+      <input formControlName="nickname" id="user-nickname" type="text" placeholder="Ej: Manu">
+    </div>
+    <div class="field">
+      <label for="user-email">E-mail</label>
+      <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
+    </div>
+    <div class="field">
+      <label for="user-password">Password</label>
+      <input formControlName="password" id="user-password" type="password" placeholder="Ej: 123456789">
+    </div>
+    <div class="field">
+      <label for="user-confirm-password">Confirm Password</label>
+      <input formControlName="confirmPassword" id="user-confirm-password" type="password" placeholder="Ej: 123456789">
+    </div>
+
+    <div class="field">
+      <label for="user-avatar">Url Avatar</label>
+      <!-- <input id="user-avatar" type="file"> -->
+      <input formControlName="avatar" id="user-avatar" type="text" placeholder="http://www.dominio.co/images/your-avatar.png">
+    </div>
+    <div class="field">
+      <button>Register user</button>
+    </div>
+
+  </form>
+
+</div>

@@ -9,43 +9,55 @@ export const routes: Routes = [
   // Rutas con LazyLoad (Carga Perezosa)
   // Para importar la ruta sin resolver la Promesa usando then/catch, se debe poner exportar la clase como default (ver PageNotFound.ts)
   {
+    path: 'login',
+    loadComponent: () => import( './features/auth/login/login' )
+  },
+  {
+    path: 'register',
+    loadComponent: () => import( './features/auth/register/register' )
+  },
+  {
     path: '404',
     loadComponent: () => import( './features/page-not-found/page-not-found')
   },
   {
-    path: 'user/new',
+    path: 'dashboard',
+    loadComponent: () => import( './features/dashboard/dashboard')
+  },
+  {
+    path: 'dashboard/user/new',
     loadComponent: () => import( './features/users/user-new-form/user-new-form' )
   },
   {
-    path: 'user/edit/:id',
+    path: 'dashboard/user/edit/:id',
     loadComponent: () => import( './features/users/user-edit-form/user-edit-form')
   },
   {
-    path: 'user/list',
+    path: 'dashboard/user/list',
     loadComponent: () => import( './features/users/user-list/user-list' )
   },
   {
-    path: 'category/new',
+    path: 'dashboard/category/new',
     loadComponent: () => import( './features/categories/category-new-form/category-new-form')
   },
   {
-    path: 'category/edit',
+    path: 'dashboard/category/edit/:id',
     loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
   },
   {
-    path: 'category/list',
+    path: 'dashboard/category/list',
     loadComponent: () => import( './features/categories/category-list/category-list' )
   },
   {
-    path: 'product/new',
+    path: 'dashboard/product/new',
     loadComponent: () => import( './features/products/product-new-form/product-new-form' )
   },
   {
-    path: 'product/edit',
+    path: 'dashboard/product/edit',
     loadComponent: () => import( './features/products/product-list/product-list' )
   },
   {
-    path: 'product/list',
+    path: 'dashboard/product/list',
     loadComponent: () => import( './features/products/product-list/product-list' )
   },
   // Redirections

@@ -1,0 +1,26 @@
+<div class="page page-user">
+  <h2 class="title title-form title-user-form">Login</h2>
+
+    <p>Por favor diligencie todos los campos del formulario</p>
+
+  <form
+    [formGroup]="formData"
+    (ngSubmit)="onSubmit()"
+    class="form form-user"
+  >
+
+    <div class="field">
+      <label for="user-email">E-mail</label>
+      <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
+    </div>
+    <div class="field">
+      <label for="user-password">Password</label>
+      <input formControlName="password" id="user-password" type="password" placeholder="Ej: 123456789">
+    </div>
+    <div class="field">
+      <button>Sign In</button>
+    </div>
+
+  </form>
+
+</div>

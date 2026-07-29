@@ -1,16 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpRoles } from '../../../core/services/http-roles';
 import { BehaviorSubject } from 'rxjs';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-user-new-form',
+  selector: 'app-register',
   imports: [ ReactiveFormsModule, AsyncPipe, JsonPipe ],
-  templateUrl: './user-new-form.html',
-  styleUrl: './user-new-form.css',
+  templateUrl: './register.html',
+  styleUrl: './register.css',
 })
-export default class UserNewForm {
+export default class Register {
   private httpRoles = inject( HttpRoles );
 
   //
@@ -25,6 +25,8 @@ export default class UserNewForm {
       email: new FormControl( '', [ Validators.required, Validators.email ] ),
       password: new FormControl( '', [ Validators.required] ),
       confirmPassword: new FormControl( '', [ Validators.required] ),
+      status: new FormControl( true ),
+      role: new FormControl( 'subscriber', [ Validators.required] ),
       avatar: new FormControl( '' )
     });
   }
