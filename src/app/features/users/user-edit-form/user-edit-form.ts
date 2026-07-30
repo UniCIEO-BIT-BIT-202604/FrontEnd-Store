@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpRoles } from '../../../core/services/http-roles';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
@@ -18,31 +18,33 @@ import Swal from 'sweetalert2';
 export default class UserEditForm {
   selectedId!: string | null;    // Evita que TypeScript me obligue a definir el valor del atributo
 
-  private activatedRoute = inject( ActivatedRoute );
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+
   roleList$ = new BehaviorSubject<any[]>([]);    // RxJS: Observables
 
   formData: FormGroup;
 
-  private httpRoles = inject( HttpRoles );
-  private httpUsers = inject( HttpUsers );
+  private httpRoles = inject(HttpRoles);
+  private httpUsers = inject(HttpUsers);
 
   constructor() {
     // Define la estructura equivalente del formulario en HTML
     this.formData = new FormGroup({
-      name: new FormControl( '', [ Validators.required, Validators.minLength(2), Validators.maxLength(50) ] ),
-      nickname: new FormControl( '', [ Validators.required, Validators.minLength(3), Validators.maxLength(20)] ),
-      email: new FormControl( '', [ Validators.required, Validators.email ] ),
-      password: new FormControl( '', [ Validators.required] ),
-      confirmPassword: new FormControl( '', [ Validators.required] ),
-      status: new FormControl( true ),
-      role: new FormControl( 'subscriber', [ Validators.required] ),
-      avatar: new FormControl( '' )
+      name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
+      nickname: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required]),
+      status: new FormControl(true),
+      role: new FormControl('subscriber', [Validators.required]),
+      avatar: new FormControl('')
     });
   }
 
   ngOnInit() {
     // Obtener el ID que se encuentra en la URL (Solamente cuando el formulario de editar es un componente de pagina)
-    this.selectedId = this.activatedRoute.snapshot.paramMap.get( 'id' );
+    this.selectedId = this.activatedRoute.snapshot.paramMap.get('id');
 
     // Obtiene los datos del usuario para llenar el formulario usando el ID de la URL
     this.getDataFillForm();
@@ -53,9 +55,9 @@ export default class UserEditForm {
 
   private getDataFillForm() {
     // Consulta para traer los datos del usuario por el ID que se obtiene de la RUL
-    this.httpUsers.getUserById( this.selectedId ).subscribe({
-      next: ( data ) => {
-        console.log( data );
+    this.httpUsers.getUserById(this.selectedId).subscribe({
+      next: (data) => {
+        console.log(data);
 
         // Desestrucurar solo los datos que vamos a usar para llenar el formulario
         // const { name, nickname, email, status, role, avatar } = data.data;
@@ -72,11 +74,11 @@ export default class UserEditForm {
           avatar
         });
       },
-      error: ( err ) => {
-        console.error( err );
+      error: (err) => {
+        console.error(err);
       },
       complete: () => {
-        console.log( 'Obtiene los datos del ID que se encuentra en ruta' )
+        console.log('Obtiene los datos del ID que se encuentra en ruta')
       }
     });
   }
@@ -84,16 +86,16 @@ export default class UserEditForm {
   private getRoles() {
     // Observables
     this.httpRoles.getRoles().subscribe({
-      next: ( roles ) => {
-        console.log( roles );
+      next: (roles) => {
+        console.log(roles);
         // Asigno los datos obtenidos del API a una propiedad que mantiene los datos en "memoria" del componente
         this.roleList$.next(roles.data);
       },
-      error: ( err ) => {
-        console.error( err );
+      error: (err) => {
+        console.error(err);
       },
       complete: () => {
-        console.log( 'Complete siempre se ejecuta' )
+        console.log('Complete siempre se ejecuta')
       }
     });
   }
@@ -101,8 +103,8 @@ export default class UserEditForm {
   onSubmit() {
 
     // Validar que el formulario (y sus campos) sean validos
-    if( this.formData.valid ) {
-      console.log( this.formData.value );
+    if (this.formData.valid) {
+      console.log(this.formData.value);
 
       // (SweetAlert2 - Paso 2: Implementacion de la ventana Modal de SweetAlert2)
       Swal.fire({
@@ -122,15 +124,16 @@ export default class UserEditForm {
           });
 
           // Ejecutar el Servicio que me permite actualizar los datos que se encuentran resgistrados en el formulario
-          this.httpUsers.updateUserById( this.selectedId,this.formData.value ).subscribe({
-            next: ( data ) => {
-              console.log( data );
+          this.httpUsers.updateUserById(this.selectedId, this.formData.value).subscribe({
+            next: (data) => {
+              console.log(data);
+              this.router.navigate(['/dashboard/users']);
             },
-            error: ( err ) => {
-              console.error( err );
+            error: (err) => {
+              console.error(err);
             },
             complete: () => {
-              console.log( 'Actualiza usuario' );
+              console.log('Actualiza usuario');
             }
           });
 
@@ -139,7 +142,7 @@ export default class UserEditForm {
 
     }
     else {
-      console.log( 'Formulario invalido' );
+      console.log('Formulario invalido');
     }
 
   }

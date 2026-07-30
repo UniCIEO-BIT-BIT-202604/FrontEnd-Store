@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { HttpCategory } from '../../../core/services/http-category';
 
@@ -16,6 +16,8 @@ export default class CategoryEditForm {
 
   private activatedRoute = inject( ActivatedRoute );
   private httpCategory = inject( HttpCategory );
+  private router = inject( Router );
+
 
   constructor() {
     this.formData = new FormGroup({
@@ -65,10 +67,12 @@ export default class CategoryEditForm {
       this.httpCategory.updateCategoryById( this.selectedId, this.formData.value ).subscribe({
         next: ( res ) => {
           console.log( res );
+          this.router.navigate(['/dashboard/categories']);
         },
         error: ( err ) => {
           console.error( err );
         },
+
         complete: () => {
           console.log( 'Execute complete' );
         }

@@ -48,8 +48,9 @@ export default class CategoryList {
 
   onEdit( id: string ) {
     console.log( 'Editar ', id );
-    this.router.navigateByUrl( `/category/edit/${id}` ); // Redireccion enviando el ID por la ruta
+    this.router.navigateByUrl( `/dashboard/category/edit/${id}` ); // Redireccion enviando el ID por la ruta
   }
+
 
   onDelete( id: string ) {
     console.log( 'Eliminar', id );

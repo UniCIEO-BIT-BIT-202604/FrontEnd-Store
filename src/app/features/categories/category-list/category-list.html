@@ -2,7 +2,7 @@
 
   <h2>Category List</h2>
 
-  <pre>{{ categoryList$ | async | json }}</pre>
+  <pre class="pre">{{ categoryList$ | async | json }}</pre>
 
   <div class="option">
     <a routerLink="/category/new">New Category</a>
@@ -20,42 +20,32 @@
     <tbody>
 
       @for ( category of ( categoryList$ | async ); track $index ) {
-        <tr>
-          <td>
-            <img class="category-image" [src]="category.urlImage" [alt]="category.name" [title]="category.name">
-          </td>
-          <td>{{ category.name }}</td>
-          <td>
-            @if( category.status ) {
-              <hugeicons-icon
-                class="toggle-icon toggle-on-icon"
-                [icon]="ToggleOnIcon"
-                [size]="32"
-                color="currentColor"
-                [strokeWidth]="1.5"
-              ></hugeicons-icon>
-            }
-            @else {
-              <hugeicons-icon
-                class="toggle-icon toggle-off-icon"
-                [icon]="ToggleOffIcon"
-                [size]="32"
-                color="currentColor"
-                [strokeWidth]="1.5"
-              ></hugeicons-icon>
-            }
-          </td>
-          <td>
-            <div class="options">
-              <button (click)="onEdit( category._id )">Edit</button>
-              <button (click)="onDelete( category._id )">Delete</button>
-            </div>
-          </td>
-        </tr>
+      <tr>
+        <td>
+          <img class="category-image" [src]="category.urlImage" [alt]="category.name" [title]="category.name">
+        </td>
+        <td>{{ category.name }}</td>
+        <td>
+          @if( category.status ) {
+          <hugeicons-icon class="toggle-icon toggle-on-icon" [icon]="ToggleOnIcon" [size]="32" color="currentColor"
+            [strokeWidth]="1.5"></hugeicons-icon>
+          }
+          @else {
+          <hugeicons-icon class="toggle-icon toggle-off-icon" [icon]="ToggleOffIcon" [size]="32" color="currentColor"
+            [strokeWidth]="1.5"></hugeicons-icon>
+          }
+        </td>
+        <td>
+          <div class="options">
+            <button (click)="onEdit( category._id )">Edit</button>
+            <button (click)="onDelete( category._id )">Delete</button>
+          </div>
+        </td>
+      </tr>
       }
 
     </tbody>
     <tfoot></tfoot>
-</table>
+  </table>
 
 </div>

@@ -33,8 +33,9 @@ export default class CategoryNewForm {
       this.httpCategory.createCategory( this.formData.value ).subscribe({
         next: ( data ) => {
           console.log( data );
-          this.router.navigateByUrl( '/category/list' );    // Redireccionar
+          this.router.navigateByUrl( '/dashboard/categories' );    // Redireccionar
         },
+
         error: ( err ) => {
           console.error( err );
         },
