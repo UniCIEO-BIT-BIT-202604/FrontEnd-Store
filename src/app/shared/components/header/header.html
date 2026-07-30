@@ -7,8 +7,42 @@
       <li><a class="menu-link" routerLink="/user/list" routerLinkActive="active">User List</a></li>
       <li><a class="menu-link" routerLink="/product/list" routerLinkActive="active">Product List</a></li>
       <li><a class="menu-link" routerLink="/category/list" routerLinkActive="active">Category List</a></li>
+    </ul>
+
+    <ul>
+      <!-- Reactiva con Observable (Recomendada con Pipe async) -->
+      @if (httpAuth.user$ | async; as user) {
+      <li class="user-item">
+        @if (user.avatar) {
+        <img [src]="user.avatar" [alt]="user.name || 'User'" class="user-avatar">
+        }
+        <div class="user-details">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="user-role">{{ user.role }}</span>
+        </div>
+      </li>
+      <li><a class="menu-link" style="cursor: pointer;" (click)="logout()">Logout</a></li>
+      } @else {
       <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login</a></li>
       <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register</a></li>
+      }
+
+      <!-- Manera 2: Verificación Directa / Síncrona (isLoggedIn() y user) -->
+      @if (httpAuth.isLoggedIn() && httpAuth.user; as user) {
+      <li class="user-item">
+        @if (user.avatar) {
+        <img [src]="user.avatar" [alt]="user.name || 'User'" class="user-avatar">
+        }
+        <div class="user-details">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="user-role">{{ user.role }}</span>
+        </div>
+      </li>
+      <li><a class="menu-link" style="cursor: pointer;" (click)="logout()">Logout (Síncrono)</a></li>
+      } @else {
+      <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login (Síncrono)</a></li>
+      <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register (Síncrono)</a></li>
+      }
     </ul>
   </nav>
 </header>

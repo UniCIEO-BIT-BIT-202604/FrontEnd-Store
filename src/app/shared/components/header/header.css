@@ -10,18 +10,30 @@ nav {
   }
 }
 
-/*
-nav {
+.user-item {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
-nav .site-logo {
-  width: 4rem;
-  height: 4rem;
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
 }
-*/
 
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
 
+.user-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #666;
+}
