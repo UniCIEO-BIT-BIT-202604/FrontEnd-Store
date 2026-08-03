@@ -34,7 +34,7 @@ export class HttpCategory {
   // Metodo para obtener todas las categorias
   getCategories() {
     // Http siempre devuelve los datos dentro de un Observable
-    return this.http.get<any>(`${this.BASE_URL}/categories`);
+    return this.http.get<any>(`${this.BASE_URL}/categories`, { headers: this.getHeaders() });
   }
 
   createCategory(newCategory: any) {
@@ -48,7 +48,7 @@ export class HttpCategory {
   }
 
   getCategoryById(id: string | null) {
-    return this.http.get<any>(`${this.BASE_URL}/categories/${id}`);
+    return this.http.get<any>(`${this.BASE_URL}/categories/${id}`, { headers: this.getHeaders() });
   }
 
   updateCategoryById(id: string | null, updatedCategory: any) {
