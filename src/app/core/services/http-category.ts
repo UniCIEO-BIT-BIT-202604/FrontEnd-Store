@@ -15,7 +15,8 @@ export class HttpCategory {
 
     // Usando X-Token (requerido por nuestro Backend):
     return new HttpHeaders({
-      'X-Token': token || ''
+      'X-Token': token || '',
+      'X-Origen': 'Servicio-HttpCategory'
     });
 
     // Usando X-Token con .set()
