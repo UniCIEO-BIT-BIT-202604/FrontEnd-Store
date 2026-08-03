@@ -78,7 +78,7 @@ export class HttpAuth {
 
   // Método para verificar si el usuario está autenticado (retorna true si existe un token)
   isLoggedIn(): boolean {
-    return !!this.token;
+    return !!this.token && !!this.user;
   }
 
   private getTokenFromStorage(): string | null {
