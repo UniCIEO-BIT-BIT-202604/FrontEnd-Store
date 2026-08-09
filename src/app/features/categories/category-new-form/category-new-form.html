@@ -1,58 +1,52 @@
 <div class="page page-category">
-
-  <h2>Register Category</h2>
+  <div class="header-actions">
+    <h2>Registrar Nueva Categoría</h2>
+    <a routerLink="/category/list" class="btn-back">Volver a la Lista</a>
+  </div>
 
   <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()">
-
     <div class="field">
-      <label for="category-name">Category Name</label>
-      <input type="text" formControlName="name" id="category-name">
-      <small class="error">
-        @if( name?.invalid && ( name?.dirty || name?.touched ) ) {
-
-          <!-- Validators.required -->
-          @if ( name?.errors?.[ 'required' ] ) {
-            El nombre de la categoria es obligatorio
-          }
-
-          <!-- Validators.minLength( 5 ) -->
-          @if ( name?.errors?.[ 'minlength' ]  ) {
-            El nombre de la categoria debe tener al menos 5 caracteres
-          }
-
-        }
+      <label for="category-name">Nombre de la Categoría *</label>
+      <input type="text" formControlName="name" id="category-name" placeholder="Ej: Electrónica">
+      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
+        <span *ngIf="name?.errors?.['required']">El nombre de la categoría es obligatorio</span>
+        <span *ngIf="name?.errors?.['minlength']">Mínimo 5 caracteres</span>
       </small>
     </div>
 
     <div class="field">
-      <label for="category-description">Description</label>
-      <textarea formControlName="description" id="category-description"></textarea>
-      <small class="error"></small>
+      <label for="category-slug">Slug (Opcional, se autogenera si se deja vacío)</label>
+      <input type="text" formControlName="slug" id="category-slug" placeholder="Ej: electronica">
     </div>
 
     <div class="field">
-      <label for="category-url-image">URL Image</label>
-      <input type="text" formControlName="urlImage" id="category-url-image">
-      <small class="error"></small>
+      <label for="category-description">Descripción</label>
+      <textarea formControlName="description" id="category-description" rows="3" placeholder="Descripción breve"></textarea>
     </div>
 
     <div class="field">
-      <label for="">Status</label>
+      <label for="category-url-image">URL de la Imagen (Opcional)</label>
+      <input type="text" formControlName="urlImage" id="category-url-image" placeholder="https://ejemplo.com/imagen.jpg">
+    </div>
 
+    <div class="field">
+      <label>Estado</label>
       <div class="options">
-        <input [value]="true" type="radio" formControlName="status" id="category-status-enable">
-        <label for="category-status-enable">Enable</label>
-
-        <input [value]="false" type="radio" formControlName="status" id="category-status-desable">
-        <label for="category-status-desable">Disable</label>
+        <label class="radio-label">
+          <input [value]="true" type="radio" formControlName="status" id="category-status-enable">
+          Activo
+        </label>
+        <label class="radio-label">
+          <input [value]="false" type="radio" formControlName="status" id="category-status-disable">
+          Inactivo
+        </label>
       </div>
-      <small class="error"></small>
     </div>
 
-    <div class="field">
-      <button type="submit" [disabled]="formData.invalid">Register Category</button>
+    <div class="field form-actions">
+      <button type="submit" class="btn-submit" [disabled]="formData.invalid">
+        Registrar Categoría
+      </button>
     </div>
-
   </form>
-
 </div>

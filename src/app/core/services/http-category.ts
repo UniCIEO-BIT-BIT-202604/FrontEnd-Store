@@ -1,19 +1,33 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Category, CategoryListResponse, CategoryResponse } from '../models/Category';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class HttpCategory {
-  private http = inject( HttpClient );
+  private http = inject(HttpClient);
+  private BASE_URL: string = environment.apiUrl;
 
-  // Metodo para obtener todas las categorias
-  getCategories() {
-    // Http siempre devuelve los datos dentro de un Observable
-    return this.http.get<any>( 'http://localhost:3000/api/categories' );
+  getCategories(): Observable<CategoryListResponse> {
+    return this.http.get<CategoryListResponse>(`${this.BASE_URL}/categories`);
   }
 
-  createCategory( newCategory: any ) {
-    // Http siempre devuelve los datos dentro de un Observable
-    return this.http.post( 'http://localhost:3000/api/categories', newCategory );
+  getCategoryById(id: string | null): Observable<CategoryResponse> {
+    return this.http.get<CategoryResponse>(`${this.BASE_URL}/categories/${id}`);
   }
 
+  createCategory(newCategory: Partial<Category>): Observable<CategoryResponse> {
+    return this.http.post<CategoryResponse>(`${this.BASE_URL}/categories`, newCategory);
+  }
+
+  updateCategory(id: string | null, updatedCategory: Partial<Category>): Observable<CategoryResponse> {
+    return this.http.patch<CategoryResponse>(`${this.BASE_URL}/categories/${id}`, updatedCategory);
+  }
+
+  deleteCategory(id: string | null): Observable<CategoryResponse> {
+    return this.http.delete<CategoryResponse>(`${this.BASE_URL}/categories/${id}`);
+  }
 }

@@ -1,1 +1,50 @@
-<p>category-edit-form works!</p>
+<div class="page page-category">
+  <div class="header-actions">
+    <h2>Editar Categoría</h2>
+    <a routerLink="/category/list" class="btn-back">Volver a la Lista</a>
+  </div>
+
+  <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()">
+    <div class="field">
+      <label for="category-name">Nombre de la Categoría *</label>
+      <input type="text" formControlName="name" id="category-name">
+      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
+        <span *ngIf="name?.errors?.['required']">El nombre es obligatorio</span>
+        <span *ngIf="name?.errors?.['minlength']">Mínimo 5 caracteres</span>
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="category-slug">Slug</label>
+      <input type="text" formControlName="slug" id="category-slug">
+    </div>
+
+    <div class="field">
+      <label for="category-description">Descripción</label>
+      <textarea formControlName="description" id="category-description" rows="3"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="category-url-image">URL de la Imagen</label>
+      <input type="text" formControlName="urlImage" id="category-url-image">
+    </div>
+
+    <div class="field">
+      <label>Estado</label>
+      <div class="options">
+        <label class="radio-label">
+          <input [value]="true" type="radio" formControlName="status"> Activo
+        </label>
+        <label class="radio-label">
+          <input [value]="false" type="radio" formControlName="status"> Inactivo
+        </label>
+      </div>
+    </div>
+
+    <div class="field form-actions">
+      <button type="submit" class="btn-submit" [disabled]="formData.invalid">
+        Guardar Cambios
+      </button>
+    </div>
+  </form>
+</div>

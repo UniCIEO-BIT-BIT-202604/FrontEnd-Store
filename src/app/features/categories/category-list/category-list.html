@@ -1,61 +1,67 @@
 <div class="page page-category">
-
-  <h2>Category List</h2>
-
-  <pre>{{ categoryList$ | async | json }}</pre>
-
-  <div class="option">
-    <a routerLink="/category/new">New Category</a>
+  <div class="header-actions">
+    <h2>Lista de Categorías</h2>
+    <a routerLink="/category/new" class="btn-new">Nueva Categoría</a>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Category Name</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-
-      @for ( category of ( categoryList$ | async ); track $index ) {
+  <div class="table-container" *ngIf="(categoryList$ | async) as categories">
+    <table class="category-table" *ngIf="categories.length > 0; else noCategories">
+      <thead>
         <tr>
-          <td>
-            <img class="category-image" [src]="category.urlImage" [alt]="category.name" [title]="category.name">
+          <th>Imagen / Icono</th>
+          <th>Nombre</th>
+          <th>Slug</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories">
+          <td class="img-cell">
+            <img
+              *ngIf="category.urlImage; else placeholderImg"
+              [src]="category.urlImage"
+              [alt]="category.name"
+              class="category-image"
+            >
+            <ng-template #placeholderImg>
+              <div class="category-placeholder-img">📁</div>
+            </ng-template>
           </td>
-          <td>{{ category.name }}</td>
+          <td><strong>{{ category.name }}</strong></td>
+          <td><code>{{ category.slug || 'N/A' }}</code></td>
+          <td>{{ category.description || 'Sin descripción' }}</td>
           <td>
-            @if( category.status ) {
-              <hugeicons-icon
-                class="toggle-icon toggle-on-icon"
-                [icon]="ToggleOnIcon"
-                [size]="32"
-                color="currentColor"
-                [strokeWidth]="1.5"
-              ></hugeicons-icon>
-            }
-            @else {
-              <hugeicons-icon
-                class="toggle-icon toggle-off-icon"
-                [icon]="ToggleOffIcon"
-                [size]="32"
-                color="currentColor"
-                [strokeWidth]="1.5"
-              ></hugeicons-icon>
-            }
+            <hugeicons-icon
+              *ngIf="category.status"
+              class="toggle-icon toggle-on-icon"
+              [icon]="ToggleOnIcon"
+              [size]="28"
+              color="currentColor"
+              [strokeWidth]="1.5"
+            ></hugeicons-icon>
+            <hugeicons-icon
+              *ngIf="!category.status"
+              class="toggle-icon toggle-off-icon"
+              [icon]="ToggleOffIcon"
+              [size]="28"
+              color="currentColor"
+              [strokeWidth]="1.5"
+            ></hugeicons-icon>
           </td>
-          <td>
-            <div class="options">
-              <a href="#">Edit</a>
-              <a href="#">Delete</a>
-            </div>
+          <td class="actions-cell">
+            <a [routerLink]="['/category/edit', category._id]" class="btn-action btn-edit">Editar</a>
+            <button (click)="deleteCategory(category._id)" class="btn-action btn-delete">Eliminar</button>
           </td>
         </tr>
-      }
+      </tbody>
+    </table>
 
-    </tbody>
-    <tfoot></tfoot>
-</table>
-
+    <ng-template #noCategories>
+      <div class="empty-state">
+        <p>No hay categorías registradas en el sistema.</p>
+      </div>
+    </ng-template>
+  </div>
 </div>

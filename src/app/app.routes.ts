@@ -29,7 +29,7 @@ export const routes: Routes = [
     loadComponent: () => import( './features/categories/category-new-form/category-new-form')
   },
   {
-    path: 'category/edit',
+    path: 'category/edit/:id',
     loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
   },
   {
