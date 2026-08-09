@@ -19,11 +19,11 @@ export class HttpCategory {
     return this.http.get<CategoryResponse>(`${this.BASE_URL}/categories/${id}`);
   }
 
-  createCategory(newCategory: Partial<Category>): Observable<CategoryResponse> {
+  createCategory(newCategory: FormData | Partial<Category>): Observable<CategoryResponse> {
     return this.http.post<CategoryResponse>(`${this.BASE_URL}/categories`, newCategory);
   }
 
-  updateCategory(id: string | null, updatedCategory: Partial<Category>): Observable<CategoryResponse> {
+  updateCategory(id: string | null, updatedCategory: FormData | Partial<Category>): Observable<CategoryResponse> {
     return this.http.patch<CategoryResponse>(`${this.BASE_URL}/categories/${id}`, updatedCategory);
   }
 

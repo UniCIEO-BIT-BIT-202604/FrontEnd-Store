@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe, JsonPipe, NgFor, NgIf } from '@angular/common';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { ToggleOffIcon, ToggleOnIcon } from '@hugeicons/core-free-icons';
+import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,6 +18,8 @@ import Swal from 'sweetalert2';
 })
 export default class CategoryList implements OnInit {
   categoryList$ = new BehaviorSubject<Category[]>([]);
+
+  serverHostUrl: string = environment.serverHostUrl;
 
   ToggleOffIcon = ToggleOffIcon;
   ToggleOnIcon = ToggleOnIcon;
@@ -36,6 +39,13 @@ export default class CategoryList implements OnInit {
         console.error('Error al obtener categorías:', err);
       }
     });
+  }
+
+  getImageUrl(urlImage: string | undefined): string {
+    if (!urlImage) {
+      return `${this.serverHostUrl}uploads/categories/default-category.png`;
+    }
+    return `${this.serverHostUrl}${urlImage.startsWith('/') ? urlImage.slice(1) : urlImage}`;
   }
 
   deleteCategory(id: string | undefined): void {

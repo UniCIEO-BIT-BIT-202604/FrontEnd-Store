@@ -24,9 +24,30 @@
       <textarea formControlName="description" id="category-description" rows="3"></textarea>
     </div>
 
-    <div class="field">
-      <label for="category-url-image">URL de la Imagen</label>
-      <input type="text" formControlName="urlImage" id="category-url-image">
+    <!-- Sección de Imagen de Categoría -->
+    <div class="field images-management-section">
+      <label>Imagen Actual de la Categoría</label>
+
+      <div class="previews-container">
+        <div class="preview-card">
+          <img [src]="getImageUrl()" alt="Imagen Categoría" class="preview-img">
+        </div>
+      </div>
+
+      <div class="field" style="margin-top: 10px;">
+        <label for="category-new-image">Reemplazar Imagen (Opcional)</label>
+        <input
+          type="file"
+          id="category-new-image"
+          accept="image/png, image/jpeg, image/jpg, image/webp"
+          (change)="onFileSelected($event)"
+        >
+        <small class="error" *ngIf="imageError">{{ imageError }}</small>
+      </div>
+
+      <button type="button" class="btn-danger-sm" (click)="removeImage()" style="margin-top: 8px;">
+        Quitar / Restablecer Imagen por Defecto
+      </button>
     </div>
 
     <div class="field">

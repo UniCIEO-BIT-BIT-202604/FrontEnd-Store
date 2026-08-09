@@ -20,14 +20,10 @@
         <tr *ngFor="let category of categories">
           <td class="img-cell">
             <img
-              *ngIf="category.urlImage; else placeholderImg"
-              [src]="category.urlImage"
+              [src]="getImageUrl(category.urlImage)"
               [alt]="category.name"
               class="category-image"
             >
-            <ng-template #placeholderImg>
-              <div class="category-placeholder-img">📁</div>
-            </ng-template>
           </td>
           <td><strong>{{ category.name }}</strong></td>
           <td><code>{{ category.slug || 'N/A' }}</code></td>

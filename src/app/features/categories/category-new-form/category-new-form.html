@@ -24,9 +24,25 @@
       <textarea formControlName="description" id="category-description" rows="3" placeholder="Descripción breve"></textarea>
     </div>
 
-    <div class="field">
-      <label for="category-url-image">URL de la Imagen (Opcional)</label>
-      <input type="text" formControlName="urlImage" id="category-url-image" placeholder="https://ejemplo.com/imagen.jpg">
+    <!-- Carga de Imagen de Categoría -->
+    <div class="field images-upload-section">
+      <label for="category-image">Imagen de la Categoría (Opcional, Máx 2MB)</label>
+      <input
+        type="file"
+        id="category-image"
+        accept="image/png, image/jpeg, image/jpg, image/webp"
+        (change)="onFileSelected($event)"
+      >
+      <small class="info-text">Si no se selecciona ninguna imagen, se asignará la imagen por defecto automáticamente.</small>
+      <small class="error" *ngIf="imageError">{{ imageError }}</small>
+
+      <!-- Previsualización -->
+      <div class="previews-container" *ngIf="previewUrl">
+        <div class="preview-card">
+          <img [src]="previewUrl" alt="Previsualización" class="preview-img">
+          <button type="button" class="btn-remove-preview" (click)="removePreview()" title="Quitar imagen">&times;</button>
+        </div>
+      </div>
     </div>
 
     <div class="field">

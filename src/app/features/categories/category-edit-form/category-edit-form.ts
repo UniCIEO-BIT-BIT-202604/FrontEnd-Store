@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpCategory } from '../../../core/services/http-category';
 import { Category } from '../../../core/models/Category';
 import { NgIf } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,6 +16,12 @@ import Swal from 'sweetalert2';
 })
 export default class CategoryEditForm implements OnInit {
   selectedId!: string | null;
+  serverHostUrl: string = environment.serverHostUrl;
+  currentUrlImage: string | null = null;
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+  resetImageFlag: boolean = false;
+  imageError: string | null = null;
 
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
@@ -27,7 +34,6 @@ export default class CategoryEditForm implements OnInit {
       name: new FormControl('', [Validators.required, Validators.minLength(5)]),
       slug: new FormControl(''),
       description: new FormControl(''),
-      urlImage: new FormControl(''),
       status: new FormControl(true)
     });
   }
@@ -41,11 +47,12 @@ export default class CategoryEditForm implements OnInit {
     this.httpCategory.getCategoryById(this.selectedId).subscribe({
       next: (res) => {
         const cat: Category = res.data;
+        this.currentUrlImage = cat.urlImage || '/uploads/categories/default-category.png';
+
         this.formData.patchValue({
           name: cat.name,
           slug: cat.slug,
           description: cat.description,
-          urlImage: cat.urlImage,
           status: cat.status
         });
       },
@@ -56,13 +63,64 @@ export default class CategoryEditForm implements OnInit {
     });
   }
 
+  getImageUrl(): string {
+    if (this.previewUrl) {
+      return this.previewUrl;
+    }
+    if (this.currentUrlImage) {
+      return `${this.serverHostUrl}${this.currentUrlImage.startsWith('/') ? this.currentUrlImage.slice(1) : this.currentUrlImage}`;
+    }
+    return `${this.serverHostUrl}uploads/categories/default-category.png`;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.imageError = null;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (!file.type.startsWith('image/')) {
+        this.imageError = 'Solo se admiten archivos de imagen.';
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        this.imageError = 'La imagen no puede superar 2MB.';
+        return;
+      }
+
+      this.selectedFile = file;
+      this.previewUrl = URL.createObjectURL(file);
+      this.resetImageFlag = false;
+      this.formData.markAsDirty();
+    }
+  }
+
+  removeImage(): void {
+    this.selectedFile = null;
+    this.previewUrl = null;
+    this.resetImageFlag = true;
+    this.currentUrlImage = '/uploads/categories/default-category.png';
+    this.formData.markAsDirty();
+  }
+
   onSubmit(): void {
     if (this.formData.invalid) {
       this.formData.markAllAsTouched();
       return;
     }
 
-    this.httpCategory.updateCategory(this.selectedId, this.formData.value).subscribe({
+    const payload = new FormData();
+    Object.keys(this.formData.controls).forEach(key => {
+      payload.append(key, this.formData.get(key)?.value);
+    });
+
+    if (this.selectedFile) {
+      payload.append('urlImage', this.selectedFile);
+    } else if (this.resetImageFlag) {
+      payload.append('urlImage', '');
+    }
+
+    this.httpCategory.updateCategory(this.selectedId, payload).subscribe({
       next: () => {
         Swal.fire({
           icon: 'success',
