@@ -1,94 +1,103 @@
 <div class="page page-product">
-
-  <h2>Register Product</h2>
-
-  <pre class="pre">{{ categoryList$ | async | json }}</pre>
+  <div class="header-actions">
+    <h2>Registrar Nuevo Producto</h2>
+    <a routerLink="/product/list" class="btn-back">Volver a la Lista</a>
+  </div>
 
   <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()">
-
     <div class="field">
-      <label for="product-refcode">Ref Code</label>
-      <input type="text" formControlName="referenceCode" id="product-refcode">
-      <small class="error">
-        @if ( referenceCode?.invalid && ( referenceCode?.dirty || referenceCode?.touched ) ) {
-
-          @if( referenceCode?.errors?.[ 'required' ] ) {
-            La referencia del producto es obligatoria
-          }
-
-        }
+      <label for="product-refcode">Código de Referencia *</label>
+      <input type="text" formControlName="referenceCode" id="product-refcode" placeholder="Ej: REF-1001">
+      <small class="error" *ngIf="referenceCode?.invalid && (referenceCode?.dirty || referenceCode?.touched)">
+        <span *ngIf="referenceCode?.errors?.['required']">La referencia del producto es obligatoria</span>
       </small>
     </div>
 
     <div class="field">
-      <label for="product-name">Product Name</label>
-      <input type="text" formControlName="name" id="product-name">
-      <small class="error">
-        @if ( name?.invalid && ( name?.dirty || name?.touched ) ) {
-
-          @if( name?.errors?.[ 'required' ] ) {
-            El nombre del producto es obligatorio
-          }
-
-          @if( name?.errors?.[ 'minlength' ] ) {
-            El nombre del producto debe tener al menos 3
-          }
-
-        }
+      <label for="product-name">Nombre del Producto *</label>
+      <input type="text" formControlName="name" id="product-name" placeholder="Ej: Camiseta de Algodón">
+      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
+        <span *ngIf="name?.errors?.['required']">El nombre del producto es obligatorio</span>
+        <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
       </small>
     </div>
 
     <div class="field">
-      <label for="product-description">Description</label>
-      <textarea formControlName="description" id="product-description"></textarea>
-      <small class="error">Mensaje de error</small>
+      <label for="product-description">Descripción</label>
+      <textarea formControlName="description" id="product-description" rows="3"
+        placeholder="Descripción corta del producto"></textarea>
     </div>
 
-    <div class="field">
-      <label for="product-price">Price</label>
-      <input type="number" formControlName="price" id="product-price">
-      <small class="error">Mensaje de error</small>
-    </div>
-
-    <div class="field">
-      <label for="product-stock">Stock</label>
-      <input type="number" formControlName="stock" id="product-stock">
-      <small class="error">Mensaje de error</small>
-    </div>
-
-    <div class="field">
-      <label for="product-category">Category</label>
-      <select formControlName="category" id="product-category">
-
-        <option value="">Select...</option>
-        <!-- TODO:Traer los datos el API (BackEnd) para renderizalas dinamicamente -->
-        @for (category of ( categoryList$ | async ); track $index) {
-          <option [value]="category._id">{{ category.name }}</option>
-        }
-
-      </select>
-      <small class="error">Mensaje de error</small>
-    </div>
-
-    <div class="field">
-      <label for="">Status</label>
-
-      <div class="options">
-
-        <input [value]="true" type="radio" formControlName="status" id="product-status-enable">
-        <label for="product-status-enable">Enable</label>
-
-        <input [value]="false" type="radio" formControlName="status" id="product-status-disable">
-        <label for="product-status-disable">Disable</label>
-
+    <div class="field-row">
+      <div class="field">
+        <label for="product-price">Precio ($) *</label>
+        <input type="number" formControlName="price" id="product-price" min="0" step="0.01">
+        <small class="error" *ngIf="price?.invalid && (price?.dirty || price?.touched)">
+          <span *ngIf="price?.errors?.['required']">El precio es obligatorio</span>
+          <span *ngIf="price?.errors?.['min']">El precio no puede ser negativo</span>
+        </small>
       </div>
-      <small class="error">Mensaje de error</small>
 
+      <div class="field">
+        <label for="product-stock">Stock *</label>
+        <input type="number" formControlName="stock" id="product-stock" min="1">
+        <small class="error" *ngIf="stock?.invalid && (stock?.dirty || stock?.touched)">
+          <span *ngIf="stock?.errors?.['required']">El stock es obligatorio</span>
+          <span *ngIf="stock?.errors?.['min']">El stock debe ser al menos 1</span>
+        </small>
+      </div>
     </div>
+
     <div class="field">
-      <button type="submit" [disabled]="formData.invalid">Register Product</button>
+      <label for="product-category">Categoría *</label>
+      <select formControlName="category" id="product-category">
+        <!-- <option value="">Seleccione una categoría...</option> -->
+        <option *ngFor="let categoryItem of (categoryList$ | async)" [value]="categoryItem._id">
+          {{ categoryItem.name }}
+        </option>
+      </select>
+      <small class="error" *ngIf="category?.invalid && (category?.dirty || category?.touched)">
+        <span *ngIf="category?.errors?.['required']">Debe seleccionar una categoría</span>
+      </small>
     </div>
 
-  </form>
+    <div class="field">
+      <label>Estado</label>
+      <div class="options">
+        <label class="radio-label">
+          <input [value]="true" type="radio" formControlName="status" id="product-status-enable">
+          Activo
+        </label>
+        <label class="radio-label">
+          <input [value]="false" type="radio" formControlName="status" id="product-status-disable">
+          Inactivo
+        </label>
+      </div>
+    </div>
 
+    <!-- SECCIÓN DE CÁRGA MÚLTIPLE DE IMÁGENES -->
+    <div class="field images-upload-section">
+      <label for="product-images">Imágenes del Producto * (Mínimo 1, Máximo 9)</label>
+      <input type="file" id="product-images" multiple accept="image/png, image/jpeg, image/jpg, image/webp"
+        (change)="onFilesSelected($event)">
+      <small class="info-text">La primera imagen seleccionada será asignada como principal automáticamente.</small>
+      <small class="error" *ngIf="imageError">{{ imageError }}</small>
+
+      <!-- Previsualización de Imágenes Seleccionadas -->
+      <div class="previews-container" *ngIf="selectedFiles.length > 0">
+        <div class="preview-card" *ngFor="let item of selectedFiles; let i = index">
+          <span class="main-badge" *ngIf="i === 0">Principal</span>
+          <img [src]="item.previewUrl" [alt]="item.file.name" class="preview-img">
+          <button type="button" class="btn-remove-preview" (click)="removeSelectedFile(i)"
+            title="Quitar imagen">&times;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field form-actions">
+      <button type="submit" class="btn-submit" [disabled]="formData.invalid || selectedFiles.length === 0">
+        Registrar Producto
+      </button>
+    </div>
+  </form>
 </div>

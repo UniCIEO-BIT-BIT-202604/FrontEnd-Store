@@ -41,8 +41,8 @@ export const routes: Routes = [
     loadComponent: () => import( './features/products/product-new-form/product-new-form' )
   },
   {
-    path: 'product/edit',
-    loadComponent: () => import( './features/products/product-list/product-list' )
+    path: 'product/edit/:id',
+    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
   },
   {
     path: 'product/list',
