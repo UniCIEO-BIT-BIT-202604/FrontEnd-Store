@@ -36,17 +36,15 @@
     align-items: flex-start;
     flex-flow: column;
 
-    input,
-    label {
+    input:not([type="radio"]):not([type="checkbox"]),
+    label:not(.radio-label) {
       width: 98%;
-    }
-
-    select {
-      width: 100%;
     }
 
     .options {
       display: flex;
+      gap: 16px;
+      align-items: center;
     }
   }
 }

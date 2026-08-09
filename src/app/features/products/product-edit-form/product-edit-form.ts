@@ -122,18 +122,39 @@ export default class ProductEditForm implements OnInit {
   }
 
   removeAllExistingImages(): void {
+    const mainImage = this.existingImages.find(img => img.isMain);
+    if (!mainImage && this.existingImages.length > 0) {
+      this.existingImages[0].isMain = true;
+    }
+    const targetMain = mainImage || (this.existingImages.length > 0 ? this.existingImages[0] : null);
+
+    if (!targetMain) {
+      return;
+    }
+
     Swal.fire({
-      title: '¿Marcar todas para eliminar?',
-      text: 'Se eliminarán todas las imágenes actuales al guardar.',
+      title: '¿Remover imágenes secundarias?',
+      text: 'Se eliminarán todas las imágenes secundarias del producto conservando únicamente la imagen principal.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, remover todas'
+      confirmButtonText: 'Sí, conservar solo principal',
+      cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.deleteAllImagesFlag = true;
-        this.existingImages = [];
-        this.deleteImageUrlsList = [];
-        this.selectedMainUrl = null;
+        // Recopilar URLs de todas las imágenes excepto la principal
+        const urlsToDelete = this.existingImages
+          .filter(img => img.url !== targetMain.url)
+          .map(img => img.url);
+
+        urlsToDelete.forEach(url => {
+          if (!this.deleteImageUrlsList.includes(url)) {
+            this.deleteImageUrlsList.push(url);
+          }
+        });
+
+        // Dejar como única imagen existente la principal
+        this.existingImages = [targetMain];
+        this.selectedMainUrl = targetMain.url;
         this.formData.markAsDirty();
       }
     });
