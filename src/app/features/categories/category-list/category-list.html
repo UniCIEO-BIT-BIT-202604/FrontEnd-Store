@@ -40,22 +40,10 @@
           <td><code>{{ category.slug || 'N/A' }}</code></td>
           <td>{{ category.description || 'Sin descripción' }}</td>
           <td>
-            <hugeicons-icon
-              *ngIf="category.status"
-              class="toggle-icon toggle-on-icon"
-              [icon]="ToggleOnIcon"
-              [size]="28"
-              color="currentColor"
-              [strokeWidth]="1.5"
-            ></hugeicons-icon>
-            <hugeicons-icon
-              *ngIf="!category.status"
-              class="toggle-icon toggle-off-icon"
-              [icon]="ToggleOffIcon"
-              [size]="28"
-              color="currentColor"
-              [strokeWidth]="1.5"
-            ></hugeicons-icon>
+            <label class="switch" title="Cambiar estado de la categoría">
+              <input type="checkbox" [checked]="category.status" (change)="toggleStatus(category)">
+              <span class="slider"></span>
+            </label>
           </td>
           <td class="actions-cell">
             <a [routerLink]="['/category/edit', category._id]" class="btn-action btn-edit">Editar</a>

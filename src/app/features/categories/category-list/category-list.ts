@@ -59,6 +59,30 @@ export default class CategoryList implements OnInit {
     return `${this.serverHostUrl}${urlImage.startsWith('/') ? urlImage.slice(1) : urlImage}`;
   }
 
+  toggleStatus(category: Category): void {
+    if (!category._id) return;
+    const newStatus = !category.status;
+    this.httpCategory.updateCategory(category._id, { status: newStatus }).subscribe({
+      next: () => {
+        category.status = newStatus;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        Toast.fire({
+          icon: 'success',
+          title: `Categoría ${newStatus ? 'Activada' : 'Desactivada'}`
+        });
+      },
+      error: (err) => {
+        console.error('Error al actualizar estado:', err);
+        Swal.fire('Error', 'No se pudo cambiar el estado de la categoría', 'error');
+      }
+    });
+  }
+
   deleteCategory(id: string | undefined): void {
     if (!id) return;
 

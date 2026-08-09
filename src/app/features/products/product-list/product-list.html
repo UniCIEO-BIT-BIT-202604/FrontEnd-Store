@@ -33,9 +33,10 @@
             <span class="badge-count">{{ product.images?.length || 0 }} foto(s)</span>
           </td>
           <td>
-            <span [class]="product.status ? 'status-active' : 'status-inactive'">
-              {{ product.status ? 'Activo' : 'Inactivo' }}
-            </span>
+            <label class="switch" title="Cambiar estado del producto">
+              <input type="checkbox" [checked]="product.status" (change)="toggleStatus(product)">
+              <span class="slider"></span>
+            </label>
           </td>
           <td class="actions-cell">
             <a [routerLink]="['/product/edit', product._id]" class="btn-action btn-edit">Editar</a>

@@ -17,6 +17,7 @@
         <th>Email</th>
         <th>Nickname</th>
         <th>Role</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -43,6 +44,12 @@
         <td>{{ user.email }}</td>
         <td>{{ user.nickname }}</td>
         <td>{{ user.role }}</td>
+        <td>
+          <label class="switch" title="Cambiar estado del usuario">
+            <input type="checkbox" [checked]="user.status" (change)="toggleStatus(user)">
+            <span class="slider"></span>
+          </label>
+        </td>
         <td class="options">
           <a [routerLink]="['/user', 'edit', user._id ]" (click)="onEdit( user._id )" class="btn btn-edit">Edit</a>
           <button (click)="onEdit( user._id )">
@@ -56,7 +63,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <small>No olvide que estas acciones solo pueden ser hechas por el ADMIN</small>
         </td>
       </tr>

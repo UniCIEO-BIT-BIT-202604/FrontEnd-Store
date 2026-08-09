@@ -68,6 +68,29 @@ export default class UserList {
     });
   }
 
+  toggleStatus(user: any): void {
+    const newStatus = !user.status;
+    this.httpUsers.updateUserById(user._id, { status: newStatus }).subscribe({
+      next: () => {
+        user.status = newStatus;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        Toast.fire({
+          icon: 'success',
+          title: `Estado actualizado a ${newStatus ? 'Activo' : 'Inactivo'}`
+        });
+      },
+      error: (err) => {
+        console.error('Error al actualizar estado:', err);
+        Swal.fire('Error', 'No se pudo cambiar el estado del usuario', 'error');
+      }
+    });
+  }
+
   onEdit(id: string) {
     console.log('Edit', id);
     // Redirecciona

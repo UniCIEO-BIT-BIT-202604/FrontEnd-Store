@@ -51,6 +51,34 @@ export default class ProductList implements OnInit {
     return `${this.serverHostUrl}${mainImg.url.startsWith('/') ? mainImg.url.slice(1) : mainImg.url}`;
   }
 
+  toggleStatus(product: Product): void {
+    if (!product._id) return;
+    const newStatus = !product.status;
+
+    const formData = new FormData();
+    formData.append('status', String(newStatus));
+
+    this.httpProducts.updateProduct(product._id, formData).subscribe({
+      next: () => {
+        product.status = newStatus;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        Toast.fire({
+          icon: 'success',
+          title: `Producto ${newStatus ? 'Activado' : 'Desactivado'}`
+        });
+      },
+      error: (err) => {
+        console.error('Error al actualizar estado:', err);
+        Swal.fire('Error', 'No se pudo cambiar el estado del producto', 'error');
+      }
+    });
+  }
+
   deleteProduct(id: string | undefined): void {
     if (!id) return;
 
