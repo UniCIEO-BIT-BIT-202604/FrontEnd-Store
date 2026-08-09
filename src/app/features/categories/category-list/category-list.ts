@@ -6,13 +6,15 @@ import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe, JsonPipe, NgFor, NgIf } from '@angular/common';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { ToggleOffIcon, ToggleOnIcon } from '@hugeicons/core-free-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [RouterLink, AsyncPipe, JsonPipe, NgIf, NgFor, HugeiconsIconComponent],
+  imports: [RouterLink, AsyncPipe, JsonPipe, NgIf, NgFor, HugeiconsIconComponent, FontAwesomeModule],
   templateUrl: './category-list.html',
   styleUrl: './category-list.css',
 })
@@ -20,6 +22,10 @@ export default class CategoryList implements OnInit {
   categoryList$ = new BehaviorSubject<Category[]>([]);
 
   serverHostUrl: string = environment.serverHostUrl;
+  defaultCategoryImageUrl: string = environment.defaultCategoryImageUrl;
+  defaultUIAvatarAPI: string = environment.defaultUIAvatarAPI;
+
+  faFolder = faFolder;
 
   ToggleOffIcon = ToggleOffIcon;
   ToggleOnIcon = ToggleOnIcon;
@@ -45,6 +51,11 @@ export default class CategoryList implements OnInit {
     if (!urlImage) {
       return `${this.serverHostUrl}uploads/categories/default-category.png`;
     }
+    return `${this.serverHostUrl}${urlImage.startsWith('/') ? urlImage.slice(1) : urlImage}`;
+  }
+
+  getCustomImageUrl(urlImage: string | undefined): string {
+    if (!urlImage) return '';
     return `${this.serverHostUrl}${urlImage.startsWith('/') ? urlImage.slice(1) : urlImage}`;
   }
 

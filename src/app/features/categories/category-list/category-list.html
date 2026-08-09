@@ -18,12 +18,23 @@
       </thead>
       <tbody>
         <tr *ngFor="let category of categories">
-          <td class="img-cell">
-            <img
-              [src]="getImageUrl(category.urlImage)"
-              [alt]="category.name"
-              class="category-image"
-            >
+          <td class="avatar-cell">
+            <!-- EVALUACIÓN: Si la categoría NO tiene imagen o tiene la imagen por defecto -->
+            <ng-container *ngIf="!category.urlImage || category.urlImage === defaultCategoryImageUrl || category.urlImage === '/' + defaultCategoryImageUrl; else customImage">
+              <!-- 1. Imagen por defecto servida desde el backend -->
+              <img [src]="serverHostUrl + defaultCategoryImageUrl" [alt]="category.name" class="category-image" title="1. Imagen Estática por Defecto (Backend)">
+
+              <!-- 2. Imagen generada dinámicamente desde UI-Avatars API -->
+              <img [src]="defaultUIAvatarAPI + '?name=' + category.name + '&background=2563EB&color=fff'" class="category-image" title="2. API UI-Avatars">
+
+              <!-- 3. Icono vectorial con FontAwesome -->
+              <fa-icon [icon]="faFolder" size="2x" class="user-avatar-default" title="3. Icono FontAwesome" style="color: #2563eb;"></fa-icon>
+            </ng-container>
+
+            <!-- Imagen personalizada cargada por el usuario -->
+            <ng-template #customImage>
+              <img [src]="getCustomImageUrl(category.urlImage)" [alt]="category.name" class="category-image" title="Imagen de Categoría Personalizada">
+            </ng-template>
           </td>
           <td><strong>{{ category.name }}</strong></td>
           <td><code>{{ category.slug || 'N/A' }}</code></td>
