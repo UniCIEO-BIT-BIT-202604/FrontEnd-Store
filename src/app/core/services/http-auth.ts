@@ -76,6 +76,22 @@ export class HttpAuth {
     this.clearAuthData();
   }
 
+  renewToken() {
+    return this.http.get<any>(`${this.BASE_URL}/auth/renew-token`).pipe(
+      tap((res) => {
+        if (res?.token && res?.data) {
+          this.setAuthData(res.token, res.data);
+        }
+      }),
+      map(() => true),
+      catchError((err) => {
+        console.error('Error renovando el token:', err);
+        this.clearAuthData();
+        return of(false);
+      })
+    );
+  }
+
   // Método para verificar si el usuario está autenticado (retorna true si existe un token)
   isLoggedIn(): boolean {
     return !!this.token;
