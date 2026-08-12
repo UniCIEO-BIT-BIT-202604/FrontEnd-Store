@@ -4,52 +4,58 @@
     <a routerLink="/product/new" class="btn-new">Nuevo Producto</a>
   </div>
 
-  <div class="table-container" *ngIf="(productList$ | async) as products">
-    <table class="product-table" *ngIf="products.length > 0; else noProducts">
-      <thead>
-        <tr>
-          <th>Imagen Principal</th>
-          <th>Ref. Code</th>
-          <th>Nombre</th>
-          <th>Categoría</th>
-          <th>Precio</th>
-          <th>Stock</th>
-          <th>Total Fotos</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of products">
-          <td class="img-cell">
-            <img [src]="getMainImageUrl(product)" [alt]="product.name" class="product-thumb">
-          </td>
-          <td>{{ product.referenceCode }}</td>
-          <td><strong>{{ product.name }}</strong></td>
-          <td>{{ typeofCategory(product.category) }}</td>
-          <td>{{ product.price | currency }}</td>
-          <td>{{ product.stock }}</td>
-          <td>
-            <span class="badge-count">{{ product.images?.length || 0 }} foto(s)</span>
-          </td>
-          <td>
-            <label class="switch" title="Cambiar estado del producto">
-              <input type="checkbox" [checked]="product.status" (change)="toggleStatus(product)">
-              <span class="slider"></span>
-            </label>
-          </td>
-          <td class="actions-cell">
-            <a [routerLink]="['/product/edit', product._id]" class="btn-action btn-edit">Editar</a>
-            <button (click)="deleteProduct(product._id)" class="btn-action btn-delete">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <ng-template #noProducts>
-      <div class="empty-state">
-        <p>No hay productos registrados en el sistema.</p>
-      </div>
-    </ng-template>
-  </div>
+  @if (productList$ | async; as products) {
+    <div class="table-container">
+      @if (products.length > 0) {
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Imagen Principal</th>
+              <th>Ref. Code</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Total Fotos</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of products; track product._id) {
+              <tr>
+                <td class="image-cell">
+                  <img [src]="getMainImageUrl(product)" [alt]="product.name" class="product-thumbnail">
+                </td>
+                <td><code>{{ product.referenceCode || 'N/A' }}</code></td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>{{ product.category?.name || 'Sin Categoría' }}</td>
+                <td>{{ product.price | currency:'USD':'symbol':'1.2-2' }}</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                  <span class="badge-count" title="Total de imágenes asociadas">
+                    {{ product.images?.length || 0 }} foto(s)
+                  </span>
+                </td>
+                <td>
+                  <label class="switch" title="Cambiar estado del producto">
+                    <input type="checkbox" [checked]="product.status" (change)="toggleStatus(product)">
+                    <span class="slider"></span>
+                  </label>
+                </td>
+                <td class="actions-cell">
+                  <a [routerLink]="['/product/edit', product._id]" class="btn-action btn-edit">Editar</a>
+                  <button (click)="deleteProduct(product._id)" class="btn-action btn-delete">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <div class="empty-state">
+          <p>No hay productos registrados en el inventario.</p>
+        </div>
+      }
+    </div>
+  }
 </div>

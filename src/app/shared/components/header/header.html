@@ -21,7 +21,7 @@
           <span class="user-role">{{ user.role }}</span>
         </div>
       </li>
-      <li><a class="menu-link" style="cursor: pointer;" (click)="logout()">Logout</a></li>
+      <li><a class="menu-link" href="javascript:void(0)" (click)="logout()">Logout</a></li>
       } @else {
       <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login</a></li>
       <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register</a></li>
@@ -38,7 +38,7 @@
           <span class="user-role">{{ user.role }}</span>
         </div>
       </li>
-      <li><a class="menu-link" style="cursor: pointer;" (click)="logout()">Logout (Síncrono)</a></li>
+      <li><a class="menu-link" href="javascript:void(0)" (click)="logout()">Logout (Síncrono)</a></li>
       } @else {
       <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login (Síncrono)</a></li>
       <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register (Síncrono)</a></li>

@@ -8,18 +8,23 @@
     <div class="field">
       <label for="product-refcode">Código de Referencia *</label>
       <input type="text" formControlName="referenceCode" id="product-refcode" placeholder="Ej: REF-1001">
-      <small class="error" *ngIf="referenceCode?.invalid && (referenceCode?.dirty || referenceCode?.touched)">
-        <span *ngIf="referenceCode?.errors?.['required']">La referencia del producto es obligatoria</span>
-      </small>
+      @if (referenceCode?.invalid && (referenceCode?.dirty || referenceCode?.touched)) {
+        @if (referenceCode?.errors?.['required']) {
+          <small class="error">La referencia del producto es obligatoria</small>
+        }
+      }
     </div>
 
     <div class="field">
       <label for="product-name">Nombre del Producto *</label>
       <input type="text" formControlName="name" id="product-name" placeholder="Ej: Camiseta de Algodón">
-      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
-        <span *ngIf="name?.errors?.['required']">El nombre del producto es obligatorio</span>
-        <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
-      </small>
+      @if (name?.invalid && (name?.dirty || name?.touched)) {
+        @if (name?.errors?.['required']) {
+          <small class="error">El nombre del producto es obligatorio</small>
+        } @else if (name?.errors?.['minlength']) {
+          <small class="error">El nombre debe tener al menos 3 caracteres</small>
+        }
+      }
     </div>
 
     <div class="field">
@@ -32,19 +37,25 @@
       <div class="field">
         <label for="product-price">Precio ($) *</label>
         <input type="number" formControlName="price" id="product-price" min="0" step="0.01">
-        <small class="error" *ngIf="price?.invalid && (price?.dirty || price?.touched)">
-          <span *ngIf="price?.errors?.['required']">El precio es obligatorio</span>
-          <span *ngIf="price?.errors?.['min']">El precio no puede ser negativo</span>
-        </small>
+        @if (price?.invalid && (price?.dirty || price?.touched)) {
+          @if (price?.errors?.['required']) {
+            <small class="error">El precio es obligatorio</small>
+          } @else if (price?.errors?.['min']) {
+            <small class="error">El precio no puede ser negativo</small>
+          }
+        }
       </div>
 
       <div class="field">
         <label for="product-stock">Stock *</label>
         <input type="number" formControlName="stock" id="product-stock" min="1">
-        <small class="error" *ngIf="stock?.invalid && (stock?.dirty || stock?.touched)">
-          <span *ngIf="stock?.errors?.['required']">El stock es obligatorio</span>
-          <span *ngIf="stock?.errors?.['min']">El stock debe ser al menos 1</span>
-        </small>
+        @if (stock?.invalid && (stock?.dirty || stock?.touched)) {
+          @if (stock?.errors?.['required']) {
+            <small class="error">El stock es obligatorio</small>
+          } @else if (stock?.errors?.['min']) {
+            <small class="error">El stock debe ser al menos 1</small>
+          }
+        }
       </div>
     </div>
 
@@ -52,13 +63,17 @@
       <label for="product-category">Categoría *</label>
       <select formControlName="category" id="product-category">
         <!-- <option value="">Seleccione una categoría...</option> -->
-        <option *ngFor="let categoryItem of (categoryList$ | async)" [value]="categoryItem._id">
-          {{ categoryItem.name }}
-        </option>
+        @for (categoryItem of (categoryList$ | async); track categoryItem._id) {
+          <option [value]="categoryItem._id">
+            {{ categoryItem.name }}
+          </option>
+        }
       </select>
-      <small class="error" *ngIf="category?.invalid && (category?.dirty || category?.touched)">
-        <span *ngIf="category?.errors?.['required']">Debe seleccionar una categoría</span>
-      </small>
+      @if (category?.invalid && (category?.dirty || category?.touched)) {
+        @if (category?.errors?.['required']) {
+          <small class="error">Debe seleccionar una categoría</small>
+        }
+      }
     </div>
 
     <div class="field">
@@ -81,17 +96,25 @@
       <input type="file" id="product-images" multiple accept="image/png, image/jpeg, image/jpg, image/webp"
         (change)="onFilesSelected($event)">
       <small class="info-text">La primera imagen seleccionada será asignada como principal automáticamente.</small>
-      <small class="error" *ngIf="imageError">{{ imageError }}</small>
+      @if (imageError) {
+        <small class="error">{{ imageError }}</small>
+      }
 
       <!-- Previsualización de Imágenes Seleccionadas -->
-      <div class="previews-container" *ngIf="selectedFiles.length > 0">
-        <div class="preview-card" *ngFor="let item of selectedFiles; let i = index">
-          <span class="main-badge" *ngIf="i === 0">Principal</span>
-          <img [src]="item.previewUrl" [alt]="item.file.name" class="preview-img">
-          <button type="button" class="btn-remove-preview" (click)="removeSelectedFile(i)"
-            title="Quitar imagen">&times;</button>
+      @if (selectedFiles.length > 0) {
+        <div class="previews-container">
+          @for (item of selectedFiles; track $index) {
+            <div class="preview-card">
+              @if ($index === 0) {
+                <span class="main-badge">Principal</span>
+              }
+              <img [src]="item.previewUrl" [alt]="item.file.name" class="preview-img">
+              <button type="button" class="btn-remove-preview" (click)="removeSelectedFile($index)"
+                title="Quitar imagen">&times;</button>
+            </div>
+          }
         </div>
-      </div>
+      }
     </div>
 
     <div class="field form-actions">

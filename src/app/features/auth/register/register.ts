@@ -28,7 +28,13 @@ export default class Register {
       status: new FormControl( true ),
       role: new FormControl( 'subscriber', [ Validators.required] ),
       avatar: new FormControl( '' )
-    });
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  private passwordMatchValidator(group: any) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   onSubmit() {

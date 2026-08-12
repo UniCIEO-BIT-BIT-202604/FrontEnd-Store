@@ -8,10 +8,13 @@
     <div class="field">
       <label for="category-name">Nombre de la Categoría *</label>
       <input type="text" formControlName="name" id="category-name">
-      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
-        <span *ngIf="name?.errors?.['required']">El nombre es obligatorio</span>
-        <span *ngIf="name?.errors?.['minlength']">Mínimo 5 caracteres</span>
-      </small>
+      @if (name?.invalid && (name?.dirty || name?.touched)) {
+        @if (name?.errors?.['required']) {
+          <small class="error">El nombre es obligatorio</small>
+        } @else if (name?.errors?.['minlength']) {
+          <small class="error">Mínimo 5 caracteres</small>
+        }
+      }
     </div>
 
     <div class="field">
@@ -42,7 +45,9 @@
           accept="image/png, image/jpeg, image/jpg, image/webp"
           (change)="onFileSelected($event)"
         >
-        <small class="error" *ngIf="imageError">{{ imageError }}</small>
+        @if (imageError) {
+          <small class="error">{{ imageError }}</small>
+        }
       </div>
 
       <button type="button" class="btn-danger-sm" (click)="removeImage()" style="margin-top: 8px;">

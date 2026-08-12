@@ -31,11 +31,19 @@
       <div class="field">
         <label for="product-price">Precio ($) *</label>
         <input type="number" formControlName="price" id="product-price" min="0" step="0.01">
+        <small class="error" *ngIf="price?.invalid && (price?.dirty || price?.touched)">
+          <span *ngIf="price?.errors?.['required']">El precio es obligatorio</span>
+          <span *ngIf="price?.errors?.['min']">El precio no puede ser negativo</span>
+        </small>
       </div>
 
       <div class="field">
         <label for="product-stock">Stock *</label>
         <input type="number" formControlName="stock" id="product-stock" min="1">
+        <small class="error" *ngIf="stock?.invalid && (stock?.dirty || stock?.touched)">
+          <span *ngIf="stock?.errors?.['required']">El stock es obligatorio</span>
+          <span *ngIf="stock?.errors?.['min']">El stock debe ser al menos 1</span>
+        </small>
       </div>
     </div>
 
@@ -47,6 +55,9 @@
           {{ categoryItem.name }}
         </option>
       </select>
+      <small class="error" *ngIf="category?.invalid && (category?.dirty || category?.touched)">
+        <span *ngIf="category?.errors?.['required']">Debe seleccionar una categoría</span>
+      </small>
     </div>
 
     <div class="field">

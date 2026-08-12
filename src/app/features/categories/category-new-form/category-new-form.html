@@ -8,10 +8,13 @@
     <div class="field">
       <label for="category-name">Nombre de la Categoría *</label>
       <input type="text" formControlName="name" id="category-name" placeholder="Ej: Electrónica">
-      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
-        <span *ngIf="name?.errors?.['required']">El nombre de la categoría es obligatorio</span>
-        <span *ngIf="name?.errors?.['minlength']">Mínimo 5 caracteres</span>
-      </small>
+      @if (name?.invalid && (name?.dirty || name?.touched)) {
+        @if (name?.errors?.['required']) {
+          <small class="error">El nombre de la categoría es obligatorio</small>
+        } @else if (name?.errors?.['minlength']) {
+          <small class="error">Mínimo 5 caracteres</small>
+        }
+      }
     </div>
 
     <div class="field">
@@ -34,15 +37,19 @@
         (change)="onFileSelected($event)"
       >
       <small class="info-text">Si no se selecciona ninguna imagen, se asignará la imagen por defecto automáticamente.</small>
-      <small class="error" *ngIf="imageError">{{ imageError }}</small>
+      @if (imageError) {
+        <small class="error">{{ imageError }}</small>
+      }
 
       <!-- Previsualización -->
-      <div class="previews-container" *ngIf="previewUrl">
-        <div class="preview-card">
-          <img [src]="previewUrl" alt="Previsualización" class="preview-img">
-          <button type="button" class="btn-remove-preview" (click)="removePreview()" title="Quitar imagen">&times;</button>
+      @if (previewUrl) {
+        <div class="previews-container">
+          <div class="preview-card">
+            <img [src]="previewUrl" alt="Previsualización" class="preview-img">
+            <button type="button" class="btn-remove-preview" (click)="removePreview()" title="Quitar imagen">&times;</button>
+          </div>
         </div>
-      </div>
+      }
     </div>
 
     <div class="field">

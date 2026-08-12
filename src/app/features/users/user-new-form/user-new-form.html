@@ -1,9 +1,8 @@
 <div class="page page-user">
-  <h2 class="title title-form title-user-form">Register usuarios</h2>
-
-  <pre>{{ roleList$ | async | json }}</pre>
-
-  <p>Por favor diligencie todos los campos del formulario</p>
+  <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h2 class="title title-form title-user-form" style="margin: 0;">Register usuarios</h2>
+    <a routerLink="/user/list" class="btn btn-secondary" style="text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; background-color: #6c757d; color: #fff;">Volver a la Lista</a>
+  </div>
 
   <form [formGroup]="formData" (ngSubmit)="onSubmit()" class="form form-user">
 

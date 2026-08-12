@@ -1,7 +1,7 @@
 <div class="page page-user">
   <h2 class="title title-form title-user-form">Login</h2>
 
-    <p>Por favor diligencie todos los campos del formulario</p>
+  <p>Por favor diligencie todos los campos del formulario</p>
 
   <form
     [formGroup]="formData"
@@ -12,13 +12,23 @@
     <div class="field">
       <label for="user-email">E-mail</label>
       <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
+      @if (formData.get('email')?.invalid && formData.get('email')?.touched) {
+        @if (formData.get('email')?.errors?.['required']) {
+          <small class="error">El correo electrónico es obligatorio</small>
+        } @else if (formData.get('email')?.errors?.['email']) {
+          <small class="error">Por favor ingresa un correo electrónico válido</small>
+        }
+      }
     </div>
     <div class="field">
       <label for="user-password">Password</label>
       <input formControlName="password" id="user-password" type="password" placeholder="Ej: 123456789">
+      @if (formData.get('password')?.invalid && formData.get('password')?.touched) {
+        <small class="error">La contraseña es obligatoria</small>
+      }
     </div>
     <div class="field">
-      <button>Sign In</button>
+      <button type="submit" [disabled]="formData.invalid">Sign In</button>
     </div>
 
   </form>
