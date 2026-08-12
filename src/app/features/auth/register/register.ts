@@ -3,6 +3,8 @@ import { HttpRoles } from '../../../core/services/http-roles';
 import { BehaviorSubject } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { HttpUsers } from '../../../core/services/http-users';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,8 +14,9 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
 })
 export default class Register {
   private httpRoles = inject( HttpRoles );
+  private httpUsers = inject( HttpUsers );
+  private router = inject( Router );
 
-  //
   roleList$ = new BehaviorSubject<any[]>([]);    // RxJS: Observables
   formData: FormGroup;
 
@@ -26,8 +29,7 @@ export default class Register {
       password: new FormControl( '', [ Validators.required] ),
       confirmPassword: new FormControl( '', [ Validators.required] ),
       status: new FormControl( true ),
-      role: new FormControl( 'subscriber', [ Validators.required] ),
-      avatar: new FormControl( '' )
+      role: new FormControl( 'subscriber', [ Validators.required] )
     }, { validators: this.passwordMatchValidator });
   }
 
@@ -38,20 +40,23 @@ export default class Register {
   }
 
   onSubmit() {
+    if (this.formData.valid) {
+      const { confirmPassword, ...userPayload } = this.formData.value;
 
-    console.group( 'Estados del campos del formulario' );
-    console.log( 'valid (formData)', this.formData.valid );
-    console.log( 'valid (name)', this.formData.get( 'name' )?.valid );
-    console.log( 'valid (email)', this.formData.get( 'email' )?.valid );
-    console.groupEnd;
+      // Asegurar que el rol sea el perfil más bajo por defecto ('subscriber')
+      userPayload.role = 'subscriber';
 
-    // Verificar si el formulario es valido
-    if( this.formData.valid ) {
-      // Muestro los vaalores
-      console.log( this.formData.value );
-    }
-    else {
-      console.log( 'Formulario invalido' );
+      this.httpUsers.createUser(userPayload).subscribe({
+        next: (res) => {
+          console.log('Usuario registrado públicamente con perfil subscriptor:', res);
+          this.router.navigateByUrl('/login');
+        },
+        error: (err) => {
+          console.error('Error en el registro público:', err);
+        }
+      });
+    } else {
+      this.formData.markAllAsTouched();
     }
   }
 
