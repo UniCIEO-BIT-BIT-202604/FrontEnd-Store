@@ -50,6 +50,12 @@ export default class UserList {
     }
   }
 
+  getImageUrl(urlPath: string | undefined | null): string {
+    if (!urlPath) return `${this.serverHostUrl}uploads/avatars/default-avatar.png`;
+    const cleanPath = urlPath.startsWith('/') ? urlPath.slice(1) : urlPath;
+    return `${this.serverHostUrl}${cleanPath}`;
+  }
+
   private loadUsers() {
     // Realizar la peticion de los datos de la API para que sean obtenidos antes que el componente cargue (visualmente)
     // Guarda la subscripcion al Observable para tener control del mismo

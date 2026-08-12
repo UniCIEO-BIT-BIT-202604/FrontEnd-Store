@@ -24,56 +24,79 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () => import( './features/dashboard/dashboard')
   },
+  // Rutas de Usuario
+  {
+    path: 'user/new',
+    loadComponent: () => import( './features/users/user-new-form/user-new-form' )
+  },
   {
     path: 'dashboard/user/new',
     loadComponent: () => import( './features/users/user-new-form/user-new-form' )
+  },
+  {
+    path: 'user/edit/:id',
+    loadComponent: () => import( './features/users/user-edit-form/user-edit-form')
   },
   {
     path: 'dashboard/user/edit/:id',
     loadComponent: () => import( './features/users/user-edit-form/user-edit-form')
   },
   {
+    path: 'user/list',
+    loadComponent: () => import( './features/users/user-list/user-list' )
+  },
+  {
     path: 'dashboard/user/list',
     loadComponent: () => import( './features/users/user-list/user-list' )
+  },
+  // Rutas de Categoría
+  {
+    path: 'category/new',
+    loadComponent: () => import( './features/categories/category-new-form/category-new-form')
   },
   {
     path: 'dashboard/category/new',
     loadComponent: () => import( './features/categories/category-new-form/category-new-form')
   },
   {
-    path: 'dashboard/category/edit/:id',
-    loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
-  },
-  {
     path: 'category/edit/:id',
     loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
   },
   {
-    path: 'dashboard/category/list',
-    loadComponent: () => import( './features/categories/category-list/category-list' )
+    path: 'dashboard/category/edit/:id',
+    loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
   },
   {
     path: 'category/list',
     loadComponent: () => import( './features/categories/category-list/category-list' )
   },
   {
-    path: 'dashboard/product/new',
+    path: 'dashboard/category/list',
+    loadComponent: () => import( './features/categories/category-list/category-list' )
+  },
+  // Rutas de Producto
+  {
+    path: 'product/new',
     loadComponent: () => import( './features/products/product-new-form/product-new-form' )
   },
   {
-    path: 'dashboard/product/edit/:id',
-    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
+    path: 'dashboard/product/new',
+    loadComponent: () => import( './features/products/product-new-form/product-new-form' )
   },
   {
     path: 'product/edit/:id',
     loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
   },
   {
-    path: 'dashboard/product/list',
-    loadComponent: () => import( './features/products/product-list/product-list' )
+    path: 'dashboard/product/edit/:id',
+    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
   },
   {
     path: 'product/list',
+    loadComponent: () => import( './features/products/product-list/product-list' )
+  },
+  {
+    path: 'dashboard/product/list',
     loadComponent: () => import( './features/products/product-list/product-list' )
   },
   // Redirections

@@ -102,7 +102,7 @@ export default class UserNewForm {
     // Iterar únicamente las propiedades del usuario excluyendo confirmPassword
     Object.entries(userPayload).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        payload.append(key, value as any);
+        payload.append(key, typeof value === 'boolean' ? String(value) : value as any);
       }
     });
 
@@ -117,7 +117,7 @@ export default class UserNewForm {
       next: (response) => {
         console.log('Usuario registrado con éxito:', response);
         // Redireccionar a la lista de usuarios
-        this.router.navigate(['/user', 'list']);
+        this.router.navigateByUrl('/user/list');
       },
       error: (error) => {
         console.error('Error al registrar usuario:', error);

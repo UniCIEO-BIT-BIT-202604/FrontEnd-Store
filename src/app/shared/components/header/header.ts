@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AsyncPipe } from '@angular/common';
 import { HttpAuth } from '../../../core/services/http-auth';
 
@@ -11,12 +11,22 @@ import { HttpAuth } from '../../../core/services/http-auth';
 })
 export class Header {
 
-  // Inyección pública del servicio de autenticación para uso directo en la plantilla HTML
+  private router = inject(Router);
   public httpAuth = inject(HttpAuth);
 
-  // Método para cerrar la sesión del usuario
+  getAvatarUrl(avatarPath: string | undefined | null): string {
+    if (!avatarPath) return '';
+    if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
+      return avatarPath;
+    }
+    const cleanPath = avatarPath.startsWith('/') ? avatarPath.slice(1) : avatarPath;
+    return `http://localhost:3000/${cleanPath}`;
+  }
+
+  // Método para cerrar la sesión del usuario (Asíncrono/Síncrono)
   logout(): void {
     this.httpAuth.logoutUser();
+    this.router.navigateByUrl('/login');
   }
 
 }

@@ -13,8 +13,8 @@
       <!-- Reactiva con Observable (Recomendada con Pipe async) -->
       @if (httpAuth.user$ | async; as user) {
       <li class="user-item">
-        @if (user.avatar) {
-        <img [src]="user.avatar" [alt]="user.name || 'User'" class="user-avatar">
+        @if (user.avatarUrl || user.avatar) {
+        <img [src]="getAvatarUrl(user.avatarUrl || user.avatar)" [alt]="user.name || 'User'" class="user-avatar">
         }
         <div class="user-details">
           <span class="user-name">{{ user.name }}</span>
@@ -30,8 +30,8 @@
       <!-- Manera 2: Verificación Directa / Síncrona (isLoggedIn() y user) -->
       @if (httpAuth.isLoggedIn() && httpAuth.user; as user) {
       <li class="user-item">
-        @if (user.avatar) {
-        <img [src]="user.avatar" [alt]="user.name || 'User'" class="user-avatar">
+        @if (user.avatarUrl || user.avatar) {
+        <img [src]="getAvatarUrl(user.avatarUrl || user.avatar)" [alt]="user.name || 'User'" class="user-avatar">
         }
         <div class="user-details">
           <span class="user-name">{{ user.name }}</span>

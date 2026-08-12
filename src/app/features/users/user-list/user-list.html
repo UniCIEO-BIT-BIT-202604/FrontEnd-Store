@@ -28,16 +28,16 @@
           <!-- EVALUACIÓN: Si el usuario NO tiene avatar o tiene el avatar por defecto 'uploads/avatars/default-avatar.png' -->
           @if (!user.avatarUrl && !user.avatar || (user.avatarUrl === defaultAvatarUrl || user.avatar === defaultAvatarUrl)) {
             <!-- 1. Imagen por defecto servida desde el backend -->
-            <img [src]="serverHostUrl + defaultAvatarUrl" [alt]="user.name" class="user-avatar-thumbnail" title="1. Imagen Estática por Defecto (Backend)">
+            <img [src]="getImageUrl(defaultAvatarUrl)" [alt]="user.name" class="user-avatar-thumbnail" title="1. Imagen Estática por Defecto (Backend)">
 
             <!-- 2. Imagen generada dinámicamente desde UI-Avatars API -->
-            <img [src]="defaultUIAvatarAPI + '?name=' + user.name + '&background=0D8ABC&color=fff'" class="user-avatar-thumbnail" title="2. API UI-Avatars">
+            <img [src]="defaultUIAvatarAPI + '?name=' + user.name + '&background=0D8ABC&color=fff'" [alt]="user.name" class="user-avatar-thumbnail" title="2. API UI-Avatars">
 
-            <!-- 3. Icono vectorial con FontAwesome -->
-            <fa-icon [icon]="faUser" size="2x" class="user-avatar-default" title="3. Icono FontAwesome" />
+            <!-- 3. Icono de FontAwesome -->
+            <fa-icon [icon]="faUser" size="2x" class="user-avatar-default" title="3. Icono FontAwesome"></fa-icon>
           } @else {
             <!-- Avatar subido/personalizado por el usuario -->
-            <img [src]="serverHostUrl + (user.avatarUrl || user.avatar)" [alt]="user.name" class="user-avatar-thumbnail" title="Avatar Personalizado">
+            <img [src]="getImageUrl(user.avatarUrl || user.avatar)" [alt]="user.name" class="user-avatar-thumbnail" title="Avatar Personalizado">
           }
         </td>
         <td>{{ user.name }}</td>
