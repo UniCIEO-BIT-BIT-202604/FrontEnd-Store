@@ -10,9 +10,11 @@
   border-radius: .3rem;
   padding: .6rem 1.2rem;
 }
+
 /* Color cuando el boton esta habilitado */
 .btn-disabled {
-  background-color: #7c72b2;;
+  background-color: #7c72b2;
+  ;
 }
 
 .error {
@@ -34,16 +36,15 @@
     align-items: flex-start;
     flex-flow: column;
 
-    input, label {
+    input:not([type="radio"]):not([type="checkbox"]),
+    label:not(.radio-label) {
       width: 98%;
-    }
-
-    select {
-      width: 100%;
     }
 
     .options {
       display: flex;
+      gap: 16px;
+      align-items: center;
     }
   }
 }
@@ -62,10 +63,12 @@ table {
   width: 100%;
 }
 
-td, th {
+td,
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
+  vertical-align: middle;
 }
 
 tr:nth-child(even) {
@@ -76,9 +79,11 @@ tr:nth-child(even) {
 .toggle-icon {
   width: 100%;
 }
+
 .toggle-on-icon {
   color: green;
 }
+
 .toggle-off-icon {
   color: gray;
 }
@@ -89,10 +94,25 @@ tr:nth-child(even) {
   border-radius: .7rem;
 }
 
+.user-avatar-thumbnail {
+  width: 3rem;
+  height: 3rem;
+  border-radius: .7rem;
+  object-fit: cover;
+}
+
+.avatar-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 /* Tables: Buttons */
 .options {
   display: flex;
+  align-items: center;
   gap: .4rem;
+  height: 100%;
 }
 
 .description {
@@ -125,4 +145,78 @@ tr:nth-child(even) {
   color: white;
   border: 1px solid #e34c4c;
   border-radius: .3rem;
+}
+
+.btn-delete-avatar {
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: .3rem;
+  padding: .4rem .8rem;
+  margin-top: .4rem;
+  cursor: pointer;
+  font-size: .8rem;
+}
+
+.btn-delete-avatar:hover {
+  background: #c9302c;
+}
+
+.info-text {
+  color: #31708f;
+  font-style: italic;
+  font-size: .8rem;
+  display: block;
+  margin-top: .3rem;
+}
+
+/* Switches Toggle CSS para Estado */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+  vertical-align: middle;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 22px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #10b981;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10b981;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
 }

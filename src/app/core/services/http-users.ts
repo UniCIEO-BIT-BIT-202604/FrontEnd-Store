@@ -1,50 +1,41 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpAuth } from './http-auth';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class HttpUsers {
-  // Inyectar dependencias
-  private http = inject( HttpClient );
-  private authHttp = inject( HttpAuth );
+  private http = inject(HttpClient);
+  private authHttp = inject(HttpAuth);
 
   BASE_URL: string = environment.apiUrl;
 
   private getHeader(): HttpHeaders {
     const token = this.authHttp.token;
-
     return new HttpHeaders({
-      'X-Token': token || '',
-      'Content-Type': 'application/json'
+      'X-Token': token || ''
     });
   }
 
-  createUser( newUser: any ) {
-    return this.http.post<any>( `${ this.BASE_URL }/users`, newUser, { headers: this.getHeader() } );
+  createUser(userData: any) {
+    return this.http.post<any>(`${this.BASE_URL}/users`, userData, { headers: this.getHeader() });
   }
 
   getUsers() {
-    // Observable (HttpClient)
-    return this.http.get<any>( `${ this.BASE_URL }/users`, { headers: this.getHeader() } );
+    return this.http.get<any>(`${this.BASE_URL}/users`, { headers: this.getHeader() });
   }
 
-  getUserById( id: string | null ) {
-    // Observable (HttpClient)
-    return this.http.get<any>( `${ this.BASE_URL }/users/${ id }`, { headers: this.getHeader() } );
+  getUserById(id: string | null) {
+    return this.http.get<any>(`${this.BASE_URL}/users/${id}`, { headers: this.getHeader() });
   }
 
-  deleteUserById( id: string | null ) {
-    // Observable (HttpClient)
-    return this.http.delete( `${ this.BASE_URL }/users/${ id }`, { headers: this.getHeader() } );
+  deleteUserById(id: string | null) {
+    return this.http.delete(`${this.BASE_URL}/users/${id}`, { headers: this.getHeader() });
   }
 
-  updateUserById( id: string | null, updatedUser: any ) {
-    // Observable (HttpClient)
-    return this.http.patch( `${ this.BASE_URL }/users/${ id }`, updatedUser, { headers: this.getHeader() } );
+  updateUserById(id: string | null, updatedUser: any) {
+    return this.http.patch(`${this.BASE_URL}/users/${id}`, updatedUser, { headers: this.getHeader() });
   }
-
 }
-
-
-

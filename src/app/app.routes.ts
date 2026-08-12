@@ -45,7 +45,15 @@ export const routes: Routes = [
     loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
   },
   {
+    path: 'category/edit/:id',
+    loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
+  },
+  {
     path: 'dashboard/category/list',
+    loadComponent: () => import( './features/categories/category-list/category-list' )
+  },
+  {
+    path: 'category/list',
     loadComponent: () => import( './features/categories/category-list/category-list' )
   },
   {
@@ -53,11 +61,19 @@ export const routes: Routes = [
     loadComponent: () => import( './features/products/product-new-form/product-new-form' )
   },
   {
-    path: 'dashboard/product/edit',
-    loadComponent: () => import( './features/products/product-list/product-list' )
+    path: 'dashboard/product/edit/:id',
+    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
+  },
+  {
+    path: 'product/edit/:id',
+    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
   },
   {
     path: 'dashboard/product/list',
+    loadComponent: () => import( './features/products/product-list/product-list' )
+  },
+  {
+    path: 'product/list',
     loadComponent: () => import( './features/products/product-list/product-list' )
   },
   // Redirections

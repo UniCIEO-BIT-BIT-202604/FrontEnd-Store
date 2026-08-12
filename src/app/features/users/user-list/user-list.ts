@@ -5,10 +5,10 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import Swal from 'sweetalert2';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCoffee, faPen } from '@fortawesome/free-solid-svg-icons';
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import { faCoffee, faPen, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { HttpUsers } from '../../../core/services/http-users';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -17,30 +17,35 @@ import { HttpUsers } from '../../../core/services/http-users';
   styleUrl: './user-list.css',
 })
 export default class UserList {
-  // Atributos de iconos con Fontawesome
-  faCoffee = faCoffee;
-  faPen = faPen;
-  faLinkedin = faLinkedin;
-
   // Atributos de la logica del componente
   subscriberUser!: Subscription;    // ! Pase por alto que 'subscriberUser' sea definido como un valor undefined
   subscriberDeleteUser!: Subscription;
+
   public userList$ = new BehaviorSubject<any>([]);
 
-  private httpUsers = inject( HttpUsers );
-  private router = inject( Router );
+  serverHostUrl: string = environment.serverHostUrl;
+  defaultAvatarUrl: string = environment.defaultAvatarUrl;
+  defaultUIAvatarAPI: string = environment.defaultUIAvatarAPI;
+
+  private httpUsers = inject(HttpUsers);
+  private router = inject(Router);
+
+  // Atributos de iconos con Fontawesome
+  faCoffee = faCoffee;
+  faPen = faPen;
+  faUser = faUser;
 
   // Hook: Saber cuando se inicializa el componente
   ngOnInit() {
     this.loadUsers();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     // Verifico si existe una subscripción activa y la desubscribo
-    if ( this.subscriberUser ) {
+    if (this.subscriberUser) {
       this.subscriberUser.unsubscribe();
     }
-    if( this.subscriberDeleteUser ) {
+    if (this.subscriberDeleteUser) {
       this.subscriberDeleteUser.unsubscribe();
     }
   }
@@ -49,28 +54,51 @@ export default class UserList {
     // Realizar la peticion de los datos de la API para que sean obtenidos antes que el componente cargue (visualmente)
     // Guarda la subscripcion al Observable para tener control del mismo
     this.subscriberUser = this.httpUsers.getUsers().subscribe({
-      next: ( data ) => {
-        console.log( data );
+      next: (res) => {
+        console.log(res);
         // Asignar la lista de usuarios al observable
-        this.userList$.next( data.data );   // Solo la lista de los usuarios
+        this.userList$.next(res.data || res);   // Solo la lista de los usuarios
       },
-      error: ( err ) => {
-        console.error( err );
-      } ,
+      error: (err) => {
+        console.error(err);
+      },
       complete: () => {
-        console.log( 'Lista todos los usuarios' );
+        console.log('Lista todos los usuarios');
       }
     });
   }
 
-  onEdit( id: string ) {
-    console.log( 'Edit', id );
-    // Redirecciona
-    // this.router.navigateByUrl( `/user/edit/${id}` )
-    this.router.navigate([ '/user', 'edit', id ]);
+  toggleStatus(user: any): void {
+    const newStatus = !user.status;
+    this.httpUsers.updateUserById(user._id, { status: newStatus }).subscribe({
+      next: () => {
+        user.status = newStatus;
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        Toast.fire({
+          icon: 'success',
+          title: `Estado actualizado a ${newStatus ? 'Activo' : 'Inactivo'}`
+        });
+      },
+      error: (err) => {
+        console.error('Error al actualizar estado:', err);
+        Swal.fire('Error', 'No se pudo cambiar el estado del usuario', 'error');
+      }
+    });
   }
 
-  onDelete( id: string ) {
+  onEdit(id: string) {
+    console.log('Edit', id);
+    // Redirecciona
+    // this.router.navigateByUrl( `/user/edit/${id}` )
+    this.router.navigate(['/user', 'edit', id]);
+  }
+
+  onDelete(id: string) {
 
     // Implementa la ventana emergente con SweetAlert2
     Swal.fire({
@@ -93,19 +121,19 @@ export default class UserList {
 
         // console.log( 'Delete', id );
         // Guarda la subscripcion al Observable para tener control del mismo
-        this.subscriberDeleteUser = this.httpUsers.deleteUserById( id ).subscribe({
-          next: ( data ) => {
-            console.log( data );
+        this.subscriberDeleteUser = this.httpUsers.deleteUserById(id).subscribe({
+          next: (data) => {
+            console.log(data);
             this.loadUsers();      // Ejecutar
           },
-          error: ( err ) => {
-            console.error( err );
+          error: (err) => {
+            console.error(err);
           },
           complete: () => {
-            console.log( 'Peticion al API para eliminar usuario por ID' );
+            console.log('Peticion al API para eliminar usuario por ID');
           }
         });
-    }
+      }
 
 
 

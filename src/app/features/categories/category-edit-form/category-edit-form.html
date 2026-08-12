@@ -1,58 +1,71 @@
 <div class="page page-category">
-
-  <h2>Register Category</h2>
+  <div class="header-actions">
+    <h2>Editar Categoría</h2>
+    <a routerLink="/category/list" class="btn-back">Volver a la Lista</a>
+  </div>
 
   <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()">
-
     <div class="field">
-      <label for="category-name">Category Name</label>
+      <label for="category-name">Nombre de la Categoría *</label>
       <input type="text" formControlName="name" id="category-name">
-      <small class="error">
-        @if( name?.invalid && ( name?.dirty || name?.touched ) ) {
-
-          <!-- Validators.required -->
-          @if ( name?.errors?.[ 'required' ] ) {
-            El nombre de la categoria es obligatorio
-          }
-
-          <!-- Validators.minLength( 5 ) -->
-          @if ( name?.errors?.[ 'minlength' ]  ) {
-            El nombre de la categoria debe tener al menos 5 caracteres
-          }
-
-        }
+      <small class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)">
+        <span *ngIf="name?.errors?.['required']">El nombre es obligatorio</span>
+        <span *ngIf="name?.errors?.['minlength']">Mínimo 5 caracteres</span>
       </small>
     </div>
 
     <div class="field">
-      <label for="category-description">Description</label>
-      <textarea formControlName="description" id="category-description"></textarea>
-      <small class="error"></small>
+      <label for="category-slug">Slug</label>
+      <input type="text" formControlName="slug" id="category-slug">
     </div>
 
     <div class="field">
-      <label for="category-url-image">URL Image</label>
-      <input type="text" formControlName="urlImage" id="category-url-image">
-      <small class="error"></small>
+      <label for="category-description">Descripción</label>
+      <textarea formControlName="description" id="category-description" rows="3"></textarea>
     </div>
 
-    <div class="field">
-      <label for="">Status</label>
+    <!-- Sección de Imagen de Categoría -->
+    <div class="field images-management-section">
+      <label>Imagen Actual de la Categoría</label>
 
-      <div class="options">
-        <input [value]="true" type="radio" formControlName="status" id="category-status-enable">
-        <label for="category-status-enable">Enable</label>
-
-        <input [value]="false" type="radio" formControlName="status" id="category-status-desable">
-        <label for="category-status-desable">Disable</label>
+      <div class="previews-container">
+        <div class="preview-card">
+          <img [src]="getImageUrl()" alt="Imagen Categoría" class="preview-img">
+        </div>
       </div>
-      <small class="error"></small>
+
+      <div class="field" style="margin-top: 10px;">
+        <label for="category-new-image">Reemplazar Imagen (Opcional)</label>
+        <input
+          type="file"
+          id="category-new-image"
+          accept="image/png, image/jpeg, image/jpg, image/webp"
+          (change)="onFileSelected($event)"
+        >
+        <small class="error" *ngIf="imageError">{{ imageError }}</small>
+      </div>
+
+      <button type="button" class="btn-danger-sm" (click)="removeImage()" style="margin-top: 8px;">
+        Quitar / Restablecer Imagen por Defecto
+      </button>
     </div>
 
     <div class="field">
-      <button type="submit" [disabled]="formData.invalid">Register Category</button>
+      <label>Estado</label>
+      <div class="options">
+        <label class="radio-label">
+          <input [value]="true" type="radio" formControlName="status"> Activo
+        </label>
+        <label class="radio-label">
+          <input [value]="false" type="radio" formControlName="status"> Inactivo
+        </label>
+      </div>
     </div>
 
+    <div class="field form-actions">
+      <button type="submit" class="btn-submit" [disabled]="formData.invalid">
+        Guardar Cambios
+      </button>
+    </div>
   </form>
-
 </div>

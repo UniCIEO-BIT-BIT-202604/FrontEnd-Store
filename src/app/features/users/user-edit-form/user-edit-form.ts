@@ -1,146 +1,162 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpRoles } from '../../../core/services/http-roles';
 import { BehaviorSubject } from 'rxjs';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { HttpUsers } from '../../../core/services/http-users';
+import { environment } from '../../../../environments/environment';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
-// (SweetAlert2 - Paso 1: Importacion de la libreria en el componente)
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-edit-form',
-  imports: [ReactiveFormsModule, AsyncPipe, JsonPipe, RouterLink],
+  imports: [ReactiveFormsModule, AsyncPipe, JsonPipe, RouterLink, FontAwesomeModule],
   templateUrl: './user-edit-form.html',
   styleUrl: './user-edit-form.css',
 })
 export default class UserEditForm {
-  selectedId!: string | null;    // Evita que TypeScript me obligue a definir el valor del atributo
+  selectedId!: string | null;
+  currentAvatarUrl: string | null = null;
+  selectedFile: File | null = null;
+  resetAvatarFlag: boolean = false;
 
-  private activatedRoute = inject( ActivatedRoute );
-  roleList$ = new BehaviorSubject<any[]>([]);    // RxJS: Observables
+  // Variables de entorno para avatares
+  serverHostUrl: string = environment.serverHostUrl;
+  defaultAvatarUrl: string = environment.defaultAvatarUrl;
+  defaultUIAvatarAPI: string = environment.defaultUIAvatarAPI;
 
+  faUser = faUser;
+
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private httpRoles = inject(HttpRoles);
+  private httpUsers = inject(HttpUsers);
+
+  roleList$ = new BehaviorSubject<any[]>([]);
   formData: FormGroup;
 
-  private httpRoles = inject( HttpRoles );
-  private httpUsers = inject( HttpUsers );
-
   constructor() {
-    // Define la estructura equivalente del formulario en HTML
     this.formData = new FormGroup({
-      name: new FormControl( '', [ Validators.required, Validators.minLength(2), Validators.maxLength(50) ] ),
-      nickname: new FormControl( '', [ Validators.required, Validators.minLength(3), Validators.maxLength(20)] ),
-      email: new FormControl( '', [ Validators.required, Validators.email ] ),
-      password: new FormControl( '', [ Validators.required] ),
-      confirmPassword: new FormControl( '', [ Validators.required] ),
-      status: new FormControl( true ),
-      role: new FormControl( 'subscriber', [ Validators.required] ),
-      avatar: new FormControl( '' )
-    });
+      name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
+      nickname: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl(''),
+      confirmPassword: new FormControl(''),
+      status: new FormControl(true),
+      role: new FormControl('subscriber', [Validators.required])
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  private passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    if (password || confirmPassword) {
+      return password === confirmPassword ? null : { passwordMismatch: true };
+    }
+    return null;
   }
 
   ngOnInit() {
-    // Obtener el ID que se encuentra en la URL (Solamente cuando el formulario de editar es un componente de pagina)
-    this.selectedId = this.activatedRoute.snapshot.paramMap.get( 'id' );
-
-    // Obtiene los datos del usuario para llenar el formulario usando el ID de la URL
+    this.selectedId = this.activatedRoute.snapshot.paramMap.get('id');
     this.getDataFillForm();
-
-    // Obtiene todos los roles disponibles en el sistema para desplegarlos en un selector en el formulario
     this.getRoles();
   }
 
   private getDataFillForm() {
-    // Consulta para traer los datos del usuario por el ID que se obtiene de la RUL
-    this.httpUsers.getUserById( this.selectedId ).subscribe({
-      next: ( data ) => {
-        console.log( data );
+    this.httpUsers.getUserById(this.selectedId).subscribe({
+      next: (res) => {
+        const user = res.data || res;
+        this.currentAvatarUrl = user.avatarUrl || user.avatar || null;
 
-        // Desestrucurar solo los datos que vamos a usar para llenar el formulario
-        // const { name, nickname, email, status, role, avatar } = data.data;
-
-        const { data: { name, nickname, email, status, role, avatar } } = data;
-
-        // Llenar los campos del formulario con los datos obtenidos por el ID de la URL
         this.formData.patchValue({
-          name,
-          nickname,
-          email,
-          status,
-          role,
-          avatar
+          name: user.name,
+          nickname: user.nickname,
+          email: user.email,
+          status: user.status,
+          role: user.role
         });
       },
-      error: ( err ) => {
-        console.error( err );
-      },
-      complete: () => {
-        console.log( 'Obtiene los datos del ID que se encuentra en ruta' )
-      }
+      error: (err) => console.error(err)
     });
   }
 
   private getRoles() {
-    // Observables
     this.httpRoles.getRoles().subscribe({
-      next: ( roles ) => {
-        console.log( roles );
-        // Asigno los datos obtenidos del API a una propiedad que mantiene los datos en "memoria" del componente
-        this.roleList$.next(roles.data);
-      },
-      error: ( err ) => {
-        console.error( err );
-      },
-      complete: () => {
-        console.log( 'Complete siempre se ejecuta' )
-      }
+      next: (roles) => this.roleList$.next(roles.data),
+      error: (err) => console.error(err)
     });
   }
 
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.resetAvatarFlag = false;
+    } else {
+      this.selectedFile = null;
+    }
+  }
+
+  onRemoveAvatar(): void {
+    this.selectedFile = null;
+    this.resetAvatarFlag = true;
+    this.currentAvatarUrl = this.defaultAvatarUrl;
+  }
+
   onSubmit() {
-
-    // Validar que el formulario (y sus campos) sean validos
-    if( this.formData.valid ) {
-      console.log( this.formData.value );
-
-      // (SweetAlert2 - Paso 2: Implementacion de la ventana Modal de SweetAlert2)
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, edit it!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: "Edit!",
-            text: "Your file has been edited.",
-            icon: "success"
-          });
-
-          // Ejecutar el Servicio que me permite actualizar los datos que se encuentran resgistrados en el formulario
-          this.httpUsers.updateUserById( this.selectedId,this.formData.value ).subscribe({
-            next: ( data ) => {
-              console.log( data );
-            },
-            error: ( err ) => {
-              console.error( err );
-            },
-            complete: () => {
-              console.log( 'Actualiza usuario' );
-            }
-          });
-
-        }   // --> SweetAlert2
-      });   // --> SweetAlert2
-
-    }
-    else {
-      console.log( 'Formulario invalido' );
+    if (this.formData.invalid) {
+      this.formData.markAllAsTouched();
+      return;
     }
 
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡Vas a actualizar los datos de este usuario!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, actualizar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { confirmPassword, ...userPayload } = this.formData.value;
+
+        // Si la contraseña se dejó vacía al editar, la omitimos para no sobreescribirla
+        if (!userPayload.password) {
+          delete userPayload.password;
+        }
+
+        const payload = new FormData();
+        Object.entries(userPayload).forEach(([key, value]) => {
+          if (value !== null && value !== undefined) {
+            payload.append(key, value as any);
+          }
+        });
+
+        // 1. Si se seleccionó una nueva imagen binaria
+        if (this.selectedFile) {
+          payload.set('avatarUrl', this.selectedFile);
+        } 
+        // 2. Si el usuario solicitó eliminar su foto actual para volver a la por defecto
+        else if (this.resetAvatarFlag) {
+          payload.set('avatarUrl', '');
+        }
+
+        this.httpUsers.updateUserById(this.selectedId, payload).subscribe({
+          next: (data) => {
+            Swal.fire({
+              title: "¡Actualizado!",
+              text: "El usuario ha sido actualizado con éxito.",
+              icon: "success"
+            });
+            this.router.navigate(['/user', 'list']);
+          },
+          error: (err) => console.error(err)
+        });
+      }
+    });
   }
 }
