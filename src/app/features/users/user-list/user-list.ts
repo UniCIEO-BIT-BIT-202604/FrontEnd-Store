@@ -99,9 +99,7 @@ export default class UserList {
 
   onEdit(id: string) {
     console.log('Edit', id);
-    // Redirecciona
-    // this.router.navigateByUrl( `/user/edit/${id}` )
-    this.router.navigate(['/user', 'edit', id]);
+    this.router.navigate(['/dashboard', 'user', 'edit', id]);
   }
 
   onDelete(id: string) {

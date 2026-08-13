@@ -5,7 +5,7 @@
   <pre class="pre">{{ userList$ | async | json }}</pre>
 
   <div class="description">
-    <a routerLink="/user/new" class="btn btn-new">New</a>
+    <a routerLink="/dashboard/user/new" class="btn btn-new">New</a>
   </div>
 
   <table>
@@ -51,7 +51,7 @@
           </label>
         </td>
         <td class="options">
-          <a [routerLink]="['/user', 'edit', user._id ]" (click)="onEdit( user._id )" class="btn btn-edit">Edit</a>
+          <a [routerLink]="['/dashboard', 'user', 'edit', user._id ]" (click)="onEdit( user._id )" class="btn btn-edit">Edit</a>
           <button (click)="onEdit( user._id )">
             <fa-icon [icon]="faPen" />
             Edit
