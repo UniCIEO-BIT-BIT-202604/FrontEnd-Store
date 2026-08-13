@@ -1,0 +1,84 @@
+.page-user {
+  max-width: 450px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.page-user h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #1e293b;
+  font-size: 1.6rem;
+}
+
+.page-user p {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.form-user {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-user .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-user label {
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.form-user input {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-user input:focus {
+  border-color: #4736a5;
+  box-shadow: 0 0 0 3px rgba(71, 54, 165, 0.15);
+}
+
+.form-user button[type="submit"] {
+  background-color: #4736a5;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.form-user button[type="submit"]:hover:not(:disabled) {
+  background-color: #362885;
+}
+
+.form-user button[type="submit"]:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.85rem;
+}

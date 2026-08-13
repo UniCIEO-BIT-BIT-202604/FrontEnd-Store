@@ -26,8 +26,7 @@
 
 /* Forms */
 .form {
-  border: 2px solid blue;
-  width: 60%;
+  width: 100%;
   margin: 0 auto;
 
   .field {
@@ -38,7 +37,7 @@
 
     input:not([type="radio"]):not([type="checkbox"]),
     label:not(.radio-label) {
-      width: 98%;
+      width: 100%;
     }
 
     .options {
@@ -48,6 +47,7 @@
     }
   }
 }
+
 
 /* Data JSON: Verificar traida de datos */
 .pre {
