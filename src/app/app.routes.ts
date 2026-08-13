@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { guestGuard } from './core/guards/guest.guard';
 import { ROLES } from './core/constants/global.config';
 
 export const routes: Routes = [
@@ -12,10 +13,12 @@ export const routes: Routes = [
   { path: 'home', component: Home },
   {
     path: 'login',
+    canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/login/login')
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/register/register')
   },
   {
