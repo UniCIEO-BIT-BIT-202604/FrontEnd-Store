@@ -1,18 +1,19 @@
-/* Estilos generales para páginas de productos */
-.page-product {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 24px;
+/* Estilos generales para páginas y formularios de productos/categorías/usuarios */
+.page-product, .page-category, .page-user {
+  max-width: 680px;
+  margin: 30px auto;
+  padding: 28px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
 }
 
 .header-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 2px solid #f0f2f5;
 }
@@ -42,25 +43,27 @@
 }
 
 .btn-new {
-  background: #2563eb;
+  background: #4736a5;
   color: #ffffff;
 }
 
 .btn-new:hover {
-  background: #1d4ed8;
+  background: #362885;
 }
 
 /* Estilos de formulario */
-.form {
+.form, .form-user {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: .5rem;
 }
 
 .field {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  padding-bottom: 1.25rem; /* Evita que el mensaje de error desplace los elementos */
 }
 
 .field-row {
@@ -77,6 +80,8 @@ label {
 
 input[type="text"],
 input[type="number"],
+input[type="email"],
+input[type="password"],
 select,
 textarea {
   padding: 10px 14px;
@@ -85,13 +90,18 @@ textarea {
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
 select:focus,
 textarea:focus {
-  border-color: #2563eb;
+  border-color: #4736a5;
+  box-shadow: 0 0 0 3px rgba(71, 54, 165, 0.15);
 }
 
 .options {
@@ -109,11 +119,15 @@ textarea:focus {
 }
 
 .error {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   color: #ef4444;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1;
 }
 
-.info-text {
+.info-text, .help-text {
   color: #64748b;
   font-size: 0.85rem;
 }
@@ -246,79 +260,8 @@ textarea:focus {
   background: #fecaca;
 }
 
-/* Tabla de Productos */
-.product-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-}
-
-.product-table th, .product-table td {
-  padding: 12px 14px;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-  vertical-align: middle;
-}
-
-.product-table th {
-  background: #f8fafc;
-  color: #475569;
-  font-weight: 600;
-}
-
-.product-thumb {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-}
-
-.badge-count {
-  background: #e0f2fe;
-  color: #0369a1;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-}
-
-.status-active {
-  color: #15803d;
-  font-weight: 600;
-}
-
-.status-inactive {
-  color: #b91c1c;
-  font-weight: 600;
-}
-
-.actions-cell {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-action {
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  border: none;
-  text-decoration: none;
-}
-
-.btn-edit {
-  background: #fef3c7;
-  color: #b45309;
-}
-
-.btn-delete {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.btn-submit {
-  background: #2563eb;
+.btn-submit, .btn-form {
+  background: #4736a5;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -326,9 +269,15 @@ textarea:focus {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
 }
 
-.btn-submit:disabled {
+.btn-submit:hover:not(:disabled), .btn-form:hover:not(:disabled) {
+  background-color: #362885;
+}
+
+.btn-submit:disabled, .btn-disabled, .btn-form:disabled {
   background: #94a3b8;
   cursor: not-allowed;
 }

@@ -1,15 +1,15 @@
 <div class="page page-user">
-  <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-    <h2 class="title title-form title-user-form" style="margin: 0;">Register usuarios</h2>
-    <a routerLink="/user/list" class="btn btn-secondary" style="text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; background-color: #6c757d; color: #fff;">Volver a la Lista</a>
+  <div class="header-actions">
+    <h2>Registrar Usuario</h2>
+    <a routerLink="/user/list" class="btn-back">Volver a la Lista</a>
   </div>
 
   <form [formGroup]="formData" (ngSubmit)="onSubmit()" class="form form-user">
 
     <div class="field">
-      <label for="user-name">User name</label>
+      <label for="user-name">Nombre Completo *</label>
       <input formControlName="name" id="user-name" type="text" placeholder="Ej: Manuela Gomez">
-      @if (formData.get('name')?.invalid && formData.get('name')?.touched) {
+      @if (formData.get('name')?.invalid && (formData.get('name')?.dirty || formData.get('name')?.touched)) {
         @if (formData.get('name')?.errors?.['required']) {
           <small class="error">El nombre es obligatorio</small>
         } @else if (formData.get('name')?.errors?.['minlength']) {
@@ -21,9 +21,9 @@
     </div>
 
     <div class="field">
-      <label for="user-nickname">Nickname</label>
+      <label for="user-nickname">Nickname *</label>
       <input formControlName="nickname" id="user-nickname" type="text" placeholder="Ej: Manu">
-      @if (formData.get('nickname')?.invalid && formData.get('nickname')?.touched) {
+      @if (formData.get('nickname')?.invalid && (formData.get('nickname')?.dirty || formData.get('nickname')?.touched)) {
         @if (formData.get('nickname')?.errors?.['required']) {
           <small class="error">El nickname es obligatorio</small>
         } @else if (formData.get('nickname')?.errors?.['minlength']) {
@@ -35,9 +35,9 @@
     </div>
 
     <div class="field">
-      <label for="user-email">E-mail</label>
+      <label for="user-email">Correo Electrónico *</label>
       <input formControlName="email" id="user-email" type="email" placeholder="Ej: manu.gomez@correo.co">
-      @if (formData.get('email')?.invalid && formData.get('email')?.touched) {
+      @if (formData.get('email')?.invalid && (formData.get('email')?.dirty || formData.get('email')?.touched)) {
         @if (formData.get('email')?.errors?.['required']) {
           <small class="error">El correo electrónico es obligatorio</small>
         } @else if (formData.get('email')?.errors?.['email']) {
@@ -47,17 +47,17 @@
     </div>
 
     <div class="field">
-      <label for="user-password">Password</label>
+      <label for="user-password">Contraseña *</label>
       <input formControlName="password" id="user-password" type="password" placeholder="Ej: 123456789">
-      @if (formData.get('password')?.invalid && formData.get('password')?.touched) {
+      @if (formData.get('password')?.invalid && (formData.get('password')?.dirty || formData.get('password')?.touched)) {
         <small class="error">La contraseña es obligatoria</small>
       }
     </div>
 
     <div class="field">
-      <label for="user-confirm-password">Confirm Password</label>
+      <label for="user-confirm-password">Confirmar Contraseña *</label>
       <input formControlName="confirmPassword" id="user-confirm-password" type="password" placeholder="Ej: 123456789">
-      @if (formData.get('confirmPassword')?.touched) {
+      @if (formData.get('confirmPassword')?.touched || formData.get('confirmPassword')?.dirty) {
         @if (formData.get('confirmPassword')?.errors?.['required']) {
           <small class="error">La confirmación de contraseña es obligatoria</small>
         } @else if (formData.hasError('passwordMismatch')) {
@@ -67,37 +67,44 @@
     </div>
 
     <div class="field">
-      <label for="user-status">User status</label>
+      <label for="user-status">Estado del Usuario</label>
       <div class="options">
-        <input id="user-status-enable" formControlName="status" type="radio" [value]="true"><label
-          for="user-status-enable">Enable</label>
-        <input id="user-status-disable" formControlName="status" type="radio" [value]="false"><label
-          for="user-status-disable">Disable</label>
+        <label class="radio-label">
+          <input id="user-status-enable" formControlName="status" type="radio" [value]="true">
+          Activo
+        </label>
+        <label class="radio-label">
+          <input id="user-status-disable" formControlName="status" type="radio" [value]="false">
+          Inactivo
+        </label>
       </div>
     </div>
 
     <div class="field">
-      <label for="user-role">Roles</label>
+      <label for="user-role">Rol *</label>
       <select formControlName="role" id="user-role">
-        <option value="">Select..</option>
+        <option value="">Seleccione un rol...</option>
         @for( role of roleList$ | async; track $index ) {
           <option [value]="role.id">{{ role.name }}</option>
         }
       </select>
-      @if (formData.get('role')?.invalid && formData.get('role')?.touched) {
+      @if (formData.get('role')?.invalid && (formData.get('role')?.dirty || formData.get('role')?.touched)) {
         <small class="error">El rol es obligatorio</small>
       }
     </div>
+
     <div class="field">
-      <label for="user-avatar">Url Avatar</label>
+      <label for="user-avatar">Imagen de Avatar (Opcional)</label>
       <input id="user-avatar" type="file" accept="image/png, image/jpeg, image/jpg, image/webp"
         (change)="onFileSelected($event)">
       <small class="help-text">Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo: 2MB.</small>
     </div>
-    <div class="field">
-      <button type="submit" [disabled]="formData.invalid">Register user</button>
+
+    <div class="field form-actions">
+      <button type="submit" class="btn-submit" [disabled]="formData.invalid">
+        Registrar Usuario
+      </button>
     </div>
 
   </form>
-
 </div>
