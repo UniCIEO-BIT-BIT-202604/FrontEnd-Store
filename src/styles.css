@@ -158,10 +158,16 @@ tr:nth-child(even) {
   border: 1px solid #e2e8f0;
 }
 
-.avatar-cell {
-  display: flex;
+.avatar-cell, .actions-cell {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.avatar-wrapper, .actions-wrapper, .options {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .user-info-group,
@@ -181,14 +187,6 @@ tr:nth-child(even) {
   width: fit-content;
 }
 
-
-.actions-cell, .options {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-}
-
 /* Tables: Buttons */
 .btn-action, .btn-new, .btn-edit, .btn-delete {
   padding: 0.35rem 0.75rem;
@@ -203,6 +201,7 @@ tr:nth-child(even) {
   gap: 0.3rem;
   white-space: nowrap;
 }
+
 
 
 .btn-new {

@@ -47,9 +47,12 @@
                   </label>
                 </td>
                 <td class="actions-cell">
-                  <a [routerLink]="['/category/edit', category._id]" class="btn-action btn-edit">Editar</a>
-                  <button (click)="deleteCategory(category._id)" class="btn-action btn-delete">Eliminar</button>
+                  <div class="actions-wrapper">
+                    <a [routerLink]="['/category/edit', category._id]" class="btn-action btn-edit">Editar</a>
+                    <button (click)="deleteCategory(category._id)" class="btn-action btn-delete">Eliminar</button>
+                  </div>
                 </td>
+
               </tr>
             }
           </tbody>

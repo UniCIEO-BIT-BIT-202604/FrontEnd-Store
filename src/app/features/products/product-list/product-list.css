@@ -67,13 +67,19 @@
 }
 
 .actions-cell {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  vertical-align: middle;
   white-space: nowrap;
   width: 1%;
   min-width: 150px;
 }
+
+.actions-wrapper {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
 
 .btn-action {
   padding: 0.35rem 0.75rem;
