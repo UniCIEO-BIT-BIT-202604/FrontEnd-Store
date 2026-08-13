@@ -1,19 +1,25 @@
-/* Estilos generales para contenedores de formulario */
-.form-container, .page-user {
-  max-width: 680px;
+/* Contenedor de tarjeta elegante para todos los formularios (Crear / Editar) */
+.page-form {
+  max-width: 580px;
   margin: 30px auto;
-  padding: 28px;
+  padding: 32px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e8f0;
 }
 
-.page-product, .page-category {
+.page-product.page-form {
+  max-width: 720px;
+}
+
+/* Contenedor amplio para páginas de listas de tablas */
+.page-list {
   max-width: 1140px;
   margin: 20px auto;
   padding: 24px;
 }
+
 
 
 .header-actions {
