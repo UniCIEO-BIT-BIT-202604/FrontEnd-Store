@@ -1,5 +1,5 @@
-/* Estilos generales para páginas y formularios de productos/categorías/usuarios */
-.page-product, .page-category, .page-user {
+/* Estilos generales para contenedores de formulario */
+.form-container, .page-user {
   max-width: 680px;
   margin: 30px auto;
   padding: 28px;
@@ -8,6 +8,13 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e8f0;
 }
+
+.page-product, .page-category {
+  max-width: 1140px;
+  margin: 20px auto;
+  padding: 24px;
+}
+
 
 .header-actions {
   display: flex;

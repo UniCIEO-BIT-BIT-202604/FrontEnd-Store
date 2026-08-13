@@ -186,6 +186,7 @@ tr:nth-child(even) {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 /* Tables: Buttons */
@@ -200,7 +201,9 @@ tr:nth-child(even) {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  white-space: nowrap;
 }
+
 
 .btn-new {
   background: #4736a5;
