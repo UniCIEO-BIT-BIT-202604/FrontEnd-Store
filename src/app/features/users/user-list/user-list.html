@@ -4,6 +4,8 @@
     <a routerLink="/user/new" class="btn-new">Nuevo Usuario</a>
   </div>
 
+  <pre class="pre">{{ userList$ | async | json }}</pre>
+
   <div class="table-container">
     <table class="user-table">
       <thead>
@@ -19,31 +21,51 @@
       </thead>
       <tbody>
         @for ( user of ( userList$ | async ); track $index) {
-          <tr>
-            <td class="avatar-cell">
-              @if (!user.avatarUrl && !user.avatar || (user.avatarUrl === defaultAvatarUrl || user.avatar === defaultAvatarUrl)) {
-                <img [src]="getImageUrl(defaultAvatarUrl)" [alt]="user.name" class="user-avatar-thumbnail" title="Imagen Estática por Defecto (Backend)">
-              } @else {
-                <img [src]="getImageUrl(user.avatarUrl || user.avatar)" [alt]="user.name" class="user-avatar-thumbnail" title="Avatar Personalizado">
-              }
-            </td>
-            <td><strong>{{ user.name }}</strong></td>
-            <td>{{ user.email }}</td>
-            <td><code>{{ user.nickname || 'N/A' }}</code></td>
-            <td>{{ user.role }}</td>
-            <td>
-              <label class="switch" title="Cambiar estado del usuario">
-                <input type="checkbox" [checked]="user.status" (change)="toggleStatus(user)">
-                <span class="slider"></span>
-              </label>
-            </td>
-            <td class="actions-cell">
-              <a [routerLink]="['/user', 'edit', user._id]" class="btn-action btn-edit">Editar</a>
-              <button (click)="onDelete(user._id)" class="btn-action btn-delete">Eliminar</button>
-            </td>
-          </tr>
+        <tr>
+          <td class="avatar-cell">
+            <!-- EVALUACIÓN: Si el usuario NO tiene avatar o tiene el avatar por defecto 'uploads/avatars/default-avatar.png' -->
+            @if (!user.avatarUrl && !user.avatar || (user.avatarUrl === defaultAvatarUrl || user.avatar === defaultAvatarUrl)) {
+              <!-- 1. Imagen por defecto servida desde el backend -->
+              <img [src]="getImageUrl(defaultAvatarUrl)" [alt]="user.name" class="user-avatar-thumbnail" title="1. Imagen Estática por Defecto (Backend)">
+
+              <!-- 2. Imagen generada dinámicamente desde UI-Avatars API -->
+              <img [src]="defaultUIAvatarAPI + '?name=' + user.name + '&background=0D8ABC&color=fff'" [alt]="user.name" class="user-avatar-thumbnail" title="2. API UI-Avatars">
+
+              <!-- 3. Icono de FontAwesome -->
+              <fa-icon [icon]="faUser" size="2x" class="user-avatar-default" title="3. Icono FontAwesome"></fa-icon>
+            } @else {
+              <!-- Avatar subido/personalizado por el usuario -->
+              <img [src]="getImageUrl(user.avatarUrl || user.avatar)" [alt]="user.name" class="user-avatar-thumbnail" title="Avatar Personalizado">
+            }
+          </td>
+          <td><strong>{{ user.name }}</strong></td>
+          <td>{{ user.email }}</td>
+          <td><code>{{ user.nickname || 'N/A' }}</code></td>
+          <td>{{ user.role }}</td>
+          <td>
+            <label class="switch" title="Cambiar estado del usuario">
+              <input type="checkbox" [checked]="user.status" (change)="toggleStatus(user)">
+              <span class="slider"></span>
+            </label>
+          </td>
+          <td class="actions-cell options">
+            <a [routerLink]="['/user', 'edit', user._id ]" (click)="onEdit( user._id )" class="btn-action btn-edit">Edit (Link)</a>
+            <button (click)="onEdit( user._id )" class="btn-action btn-edit">
+              <fa-icon [icon]="faPen" />
+              Edit (Button)
+            </button>
+            <button (click)="onDelete( user._id )" class="btn-action btn-delete">Delete</button>
+          </td>
+        </tr>
         }
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7">
+            <small>No olvide que estas acciones solo pueden ser hechas por el ADMIN</small>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </div>
