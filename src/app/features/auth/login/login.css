@@ -24,8 +24,9 @@
 .form-user {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: .5rem;
 }
+
 
 .form-user .field {
   display: flex;
