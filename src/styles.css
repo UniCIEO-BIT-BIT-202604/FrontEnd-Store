@@ -56,23 +56,63 @@
   display: none;
 }
 
-/* Tables */
+/* General Page Layout & Tables */
+.page {
+  padding: 1.5rem 2rem;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header-actions h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
 table {
-  font-family: arial, sans-serif;
+  font-family: inherit;
   border-collapse: collapse;
   width: 100%;
+  text-align: left;
 }
 
 td,
 th {
-  border: 1px solid #dddddd;
+  border-bottom: 1px solid #e2e8f0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   text-align: left;
-  padding: 8px;
+  padding: 12px 16px;
   vertical-align: middle;
 }
 
+th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+tr:hover {
+  background-color: #f8fafc;
+}
+
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: #ffffff;
 }
 
 /* Tables: Status */
@@ -92,13 +132,16 @@ tr:nth-child(even) {
 .product-thumbnail,
 .category-image,
 .user-avatar-thumbnail {
-  width: 3rem;
-  height: 3rem;
-  max-width: 3rem;
-  max-height: 3rem;
-  border-radius: .7rem;
-  object-fit: cover;
+  width: 48px !important;
+  height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  border-radius: 8px;
+  object-fit: cover !important;
   display: block;
+  border: 1px solid #e2e8f0;
 }
 
 .avatar-cell {
@@ -107,46 +150,41 @@ tr:nth-child(even) {
   gap: 0.5rem;
 }
 
+.actions-cell, .options {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
 /* Tables: Buttons */
-.options {
-  display: flex;
+.btn-action, .btn-new, .btn-edit, .btn-delete {
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  display: inline-flex;
   align-items: center;
-  gap: .4rem;
-  height: 100%;
-}
-
-.description {
-  display: flex;
-  margin: .5rem;
-  justify-content: right;
-  align-items: center;
-}
-
-.btn {
-  padding: .3rem;
+  gap: 0.3rem;
 }
 
 .btn-new {
-  background: #765df1;
+  background: #4736a5;
   color: white;
-  border: 1px solid #765df1;
-  border-radius: .3rem;
 }
 
 .btn-edit {
   background: #399339;
   color: white;
-  border: 1px solid #399339;
-  border-radius: .3rem;
 }
 
 .btn-delete {
   background: #e34c4c;
   color: white;
-  border: 1px solid #e34c4c;
-  border-radius: .3rem;
 }
+
 
 .btn-delete-avatar {
   background: #d9534f;
