@@ -11,10 +11,8 @@
       <thead>
         <tr>
           <th>Avatar</th>
-          <th>Usuario</th>
-          <th>Email</th>
-          <th>Nickname</th>
-          <th>Rol</th>
+          <th>Usuario / Rol</th>
+          <th>Contacto (Email / Nickname)</th>
           <th>Estado</th>
           <th>Acciones</th>
         </tr>
@@ -38,10 +36,18 @@
               <img [src]="getImageUrl(user.avatarUrl || user.avatar)" [alt]="user.name" class="user-avatar-thumbnail" title="Avatar Personalizado">
             }
           </td>
-          <td><strong>{{ user.name }}</strong></td>
-          <td>{{ user.email }}</td>
-          <td><code>{{ user.nickname || 'N/A' }}</code></td>
-          <td>{{ user.role }}</td>
+          <td>
+            <div class="user-info-group">
+              <strong>{{ user.name }}</strong>
+              <small class="user-role-badge">{{ user.role }}</small>
+            </div>
+          </td>
+          <td>
+            <div class="user-contact-group">
+              <div>{{ user.email }}</div>
+              <code>&#64;{{ user.nickname || 'N/A' }}</code>
+            </div>
+          </td>
           <td>
             <label class="switch" title="Cambiar estado del usuario">
               <input type="checkbox" [checked]="user.status" (change)="toggleStatus(user)">
@@ -61,7 +67,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="7">
+          <td colspan="5">
             <small>No olvide que estas acciones solo pueden ser hechas por el ADMIN</small>
           </td>
         </tr>
