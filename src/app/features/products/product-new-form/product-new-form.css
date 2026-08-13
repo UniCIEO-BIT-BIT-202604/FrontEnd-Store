@@ -236,9 +236,45 @@ textarea:focus {
   color: #f59e0b;
 }
 
-.btn-delete {
+.card-overlay-actions .btn-delete {
   color: #f87171;
 }
+
+/* Acciones de tabla (Editar / Eliminar) */
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s ease;
+}
+
+.btn-action:hover {
+  opacity: 0.9;
+}
+
+.btn-edit {
+  background-color: #399339 !important;
+  color: #ffffff !important;
+}
+
+.btn-delete {
+  background-color: #e34c4c !important;
+  color: #ffffff !important;
+}
+
 
 .section-title-bar {
   display: flex;

@@ -83,14 +83,15 @@
 }
 
 .btn-edit {
-  background-color: #399339;
-  color: white;
+  background-color: #399339 !important;
+  color: #ffffff !important;
 }
 
 .btn-delete {
-  background-color: #e34c4c;
-  color: white;
+  background-color: #e34c4c !important;
+  color: #ffffff !important;
 }
+
 
 .badge-count {
   font-size: 0.8rem;
