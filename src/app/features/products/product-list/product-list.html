@@ -44,9 +44,12 @@
                   </label>
                 </td>
                 <td>
-                  <a [routerLink]="['/product/edit', product._id]" class="btn-action btn-edit">Editar</a>
-                  <button (click)="deleteProduct(product._id)" class="btn-action btn-delete">Eliminar</button>
+                  <div class="action-buttons">
+                    <a [routerLink]="['/product/edit', product._id]" class="btn-action btn-edit">Editar</a>
+                    <button (click)="deleteProduct(product._id)" class="btn-action btn-delete">Eliminar</button>
+                  </div>
                 </td>
+
 
 
               </tr>

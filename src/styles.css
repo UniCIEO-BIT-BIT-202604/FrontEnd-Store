@@ -163,12 +163,13 @@ tr:nth-child(even) {
   white-space: nowrap;
 }
 
-.avatar-wrapper, .options {
-  display: inline-flex;
+.action-buttons {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
 }
+
 
 
 .user-info-group,
