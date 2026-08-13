@@ -1,1 +1,44 @@
-<p>home works!</p>
+<div class="page page-home">
+  <h2>Productos Disponibles</h2>
+
+  @if (productList$ | async; as products) {
+    @if (products.length > 0) {
+      <div class="product-cards-grid">
+        @for (product of products; track product._id) {
+          <div class="product-card">
+            <div class="card-image-container">
+              <img [src]="getMainImageUrl(product)" [alt]="product.name" class="product-card-image">
+              <button class="btn-favorite" title="Agregar a Favoritos" (click)="toggleFavorite(product)">
+                <fa-icon [icon]="faHeart"></fa-icon>
+              </button>
+            </div>
+
+            <div class="card-content">
+              <span class="product-category">{{ product.category?.name || 'Sin Categoría' }}</span>
+              <h3 class="product-title">{{ product.name }}</h3>
+              <p class="product-description" *ngIf="product.description">
+                {{ product.description }}
+              </p>
+
+              <div class="card-footer">
+                <div class="price-info">
+                  <span class="product-price">{{ product.price | currency:'USD':'symbol':'1.2-2' }}</span>
+                  <span class="product-stock">Stock: {{ product.stock }}</span>
+                </div>
+
+                <button class="btn-cart" title="Agregar al Carrito" (click)="addToCart(product)">
+                  <fa-icon [icon]="faShoppingCart"></fa-icon>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>No hay productos activos con stock disponible en este momento.</p>
+      </div>
+    }
+  }
+</div>

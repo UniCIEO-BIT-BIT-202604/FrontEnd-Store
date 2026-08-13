@@ -18,6 +18,17 @@ export interface Product {
   updatedAt?: string;
 }
 
+export interface ProductCard {
+  id: string;
+  referenceCode: string;
+  name: string;
+  shortDescription: string;
+  price: number;
+  stock: number;
+  categoryName: string;
+  mainImageUrl: string;
+}
+
 export interface ProductResponse {
   msg: string;
   data: Product;
@@ -27,3 +38,4 @@ export interface ProductListResponse {
   msg: string;
   data: Product[];
 }
+
