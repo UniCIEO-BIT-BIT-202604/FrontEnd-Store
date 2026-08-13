@@ -1,7 +1,7 @@
 <div class="page page-product">
   <div class="header-actions">
     <h2>Lista de Productos</h2>
-    <a routerLink="/product/new" class="btn-new">Nuevo Producto</a>
+    <a routerLink="/dashboard/product/new" class="btn-new">Nuevo Producto</a>
   </div>
 
   @if (productList$ | async; as products) {
@@ -44,7 +44,7 @@
                   </label>
                 </td>
                 <td class="actions-cell">
-                  <a [routerLink]="['/product/edit', product._id]" class="btn-action btn-edit">Editar</a>
+                  <a [routerLink]="['/dashboard/product/edit', product._id]" class="btn-action btn-edit">Editar</a>
                   <button (click)="deleteProduct(product._id)" class="btn-action btn-delete">Eliminar</button>
                 </td>
               </tr>

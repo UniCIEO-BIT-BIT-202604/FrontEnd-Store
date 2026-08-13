@@ -10,38 +10,21 @@
     </ul>
 
     <ul>
-      <!-- Reactiva con Observable (Recomendada con Pipe async) -->
+      <!-- Verificación Reactiva con Observable user$ -->
       @if (httpAuth.user$ | async; as user) {
-      <li class="user-item">
-        @if (user.avatarUrl || user.avatar) {
-        <img [src]="getAvatarUrl(user.avatarUrl || user.avatar)" [alt]="user.name || 'User'" class="user-avatar">
-        }
-        <div class="user-details">
-          <span class="user-name">{{ user.name }}</span>
-          <span class="user-role">{{ user.role }}</span>
-        </div>
-      </li>
-      <li><a class="menu-link" href="javascript:void(0)" (click)="logout()">Logout</a></li>
+        <li class="user-item">
+          @if (user.avatarUrl || user.avatar) {
+            <img [src]="getAvatarUrl(user.avatarUrl || user.avatar)" [alt]="user.name || 'User'" class="user-avatar">
+          }
+          <div class="user-details">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-role">{{ user.role }}</span>
+          </div>
+        </li>
+        <li><a class="menu-link" href="javascript:void(0)" (click)="logout()">Logout</a></li>
       } @else {
-      <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login</a></li>
-      <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register</a></li>
-      }
-
-      <!-- Manera 2: Verificación Directa / Síncrona (isLoggedIn() y user) -->
-      @if (httpAuth.isLoggedIn() && httpAuth.user; as user) {
-      <li class="user-item">
-        @if (user.avatarUrl || user.avatar) {
-        <img [src]="getAvatarUrl(user.avatarUrl || user.avatar)" [alt]="user.name || 'User'" class="user-avatar">
-        }
-        <div class="user-details">
-          <span class="user-name">{{ user.name }}</span>
-          <span class="user-role">{{ user.role }}</span>
-        </div>
-      </li>
-      <li><a class="menu-link" href="javascript:void(0)" (click)="logout()">Logout (Síncrono)</a></li>
-      } @else {
-      <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login (Síncrono)</a></li>
-      <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register (Síncrono)</a></li>
+        <li><a class="menu-link" routerLink="/login" routerLinkActive="active">Login</a></li>
+        <li><a class="menu-link" routerLink="/register" routerLinkActive="active">Register</a></li>
       }
     </ul>
   </nav>

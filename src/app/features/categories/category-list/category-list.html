@@ -1,7 +1,7 @@
 <div class="page page-category">
   <div class="header-actions">
     <h2>Lista de Categorías</h2>
-    <a routerLink="/category/new" class="btn-new">Nueva Categoría</a>
+    <a routerLink="/dashboard/category/new" class="btn-new">Nueva Categoría</a>
   </div>
 
   @if (categoryList$ | async; as categories) {
@@ -47,7 +47,7 @@
                   </label>
                 </td>
                 <td class="actions-cell">
-                  <a [routerLink]="['/category/edit', category._id]" class="btn-action btn-edit">Editar</a>
+                  <a [routerLink]="['/dashboard/category/edit', category._id]" class="btn-action btn-edit">Editar</a>
                   <button (click)="deleteCategory(category._id)" class="btn-action btn-delete">Eliminar</button>
                 </td>
               </tr>
