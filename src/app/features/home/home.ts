@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AsyncPipe, CurrencyPipe, NgIf } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
@@ -10,10 +10,11 @@ import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [AsyncPipe, NgIf, CurrencyPipe, FontAwesomeModule],
+  imports: [AsyncPipe, CurrencyPipe, FontAwesomeModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
+
 export class Home implements OnInit {
   productList$ = new BehaviorSubject<Product[]>([]);
   serverHostUrl: string = environment.serverHostUrl;

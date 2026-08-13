@@ -16,9 +16,12 @@
             <div class="card-content">
               <span class="product-category">{{ product.category?.name || 'Sin Categoría' }}</span>
               <h3 class="product-title">{{ product.name }}</h3>
-              <p class="product-description" *ngIf="product.description">
-                {{ product.description }}
-              </p>
+              @if (product.description) {
+                <p class="product-description">
+                  {{ product.description }}
+                </p>
+              }
+
 
               <div class="card-footer">
                 <div class="price-info">
