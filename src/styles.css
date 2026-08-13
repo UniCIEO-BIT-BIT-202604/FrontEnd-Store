@@ -158,17 +158,18 @@ tr:nth-child(even) {
   border: 1px solid #e2e8f0;
 }
 
-.avatar-cell, .actions-cell {
+.avatar-cell {
   vertical-align: middle;
   white-space: nowrap;
 }
 
-.avatar-wrapper, .actions-wrapper, .options {
+.avatar-wrapper, .options {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
 }
+
 
 .user-info-group,
 .user-contact-group {

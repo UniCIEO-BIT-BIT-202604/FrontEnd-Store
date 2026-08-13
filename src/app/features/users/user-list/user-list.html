@@ -56,16 +56,15 @@
               <span class="slider"></span>
             </label>
           </td>
-          <td class="actions-cell">
-            <div class="actions-wrapper">
-              <a [routerLink]="['/user', 'edit', user._id ]" (click)="onEdit( user._id )" class="btn-action btn-edit">Edit (Link)</a>
-              <button (click)="onEdit( user._id )" class="btn-action btn-edit">
-                <fa-icon [icon]="faPen" />
-                Edit (Button)
-              </button>
-              <button (click)="onDelete( user._id )" class="btn-action btn-delete">Delete</button>
-            </div>
+          <td>
+            <a [routerLink]="['/user', 'edit', user._id ]" (click)="onEdit( user._id )" class="btn-action btn-edit">Edit (Link)</a>
+            <button (click)="onEdit( user._id )" class="btn-action btn-edit">
+              <fa-icon [icon]="faPen" />
+              Edit (Button)
+            </button>
+            <button (click)="onDelete( user._id )" class="btn-action btn-delete">Delete</button>
           </td>
+
 
         </tr>
         }

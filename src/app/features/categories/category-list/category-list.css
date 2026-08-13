@@ -30,15 +30,6 @@
   font-size: 1.2rem;
 }
 
-.actions-cell {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  white-space: nowrap;
-  width: 1%;
-  min-width: 150px;
-}
-
 .btn-action {
   padding: 0.35rem 0.75rem;
   border-radius: 4px;
@@ -50,7 +41,9 @@
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+  margin-right: 0.4rem;
 }
+
 
 
 .btn-edit {
