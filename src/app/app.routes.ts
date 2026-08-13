@@ -22,7 +22,7 @@ export const routes: Routes = [
   },
 
   // =========================================================================
-  // 2. DASHBOARD (RUTA PRIVADA PRINCIPAL)
+  // 2. DASHBOARD PRINCIPAL
   // =========================================================================
   {
     path: 'dashboard',
@@ -31,32 +31,18 @@ export const routes: Routes = [
   },
 
   // =========================================================================
-  // 3. RUTAS DE USUARIOS (Primero estáticas: list, new | Luego dinámicas: edit/:id)
+  // 3. RUTAS PROTEGIDAS DE USUARIOS
+  // (Rutas estáticas 'list' y 'new' primero | Ruta dinámica 'edit/:id' al final)
   // =========================================================================
-  {
-    path: 'user/list',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/users/user-list/user-list')
-  },
   {
     path: 'dashboard/user/list',
     canActivate: [authGuard],
     loadComponent: () => import('./features/users/user-list/user-list')
   },
   {
-    path: 'user/new',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/users/user-new-form/user-new-form')
-  },
-  {
     path: 'dashboard/user/new',
     canActivate: [authGuard],
     loadComponent: () => import('./features/users/user-new-form/user-new-form')
-  },
-  {
-    path: 'user/edit/:id',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/users/user-edit-form/user-edit-form')
   },
   {
     path: 'dashboard/user/edit/:id',
@@ -65,32 +51,18 @@ export const routes: Routes = [
   },
 
   // =========================================================================
-  // 4. RUTAS DE CATEGORÍAS (Primero estáticas: list, new | Luego dinámicas: edit/:id)
+  // 4. RUTAS PROTEGIDAS DE CATEGORÍAS
+  // (Rutas estáticas 'list' y 'new' primero | Ruta dinámica 'edit/:id' al final)
   // =========================================================================
-  {
-    path: 'category/list',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/categories/category-list/category-list')
-  },
   {
     path: 'dashboard/category/list',
     canActivate: [authGuard],
     loadComponent: () => import('./features/categories/category-list/category-list')
   },
   {
-    path: 'category/new',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/categories/category-new-form/category-new-form')
-  },
-  {
     path: 'dashboard/category/new',
     canActivate: [authGuard],
     loadComponent: () => import('./features/categories/category-new-form/category-new-form')
-  },
-  {
-    path: 'category/edit/:id',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/categories/category-edit-form/category-edit-form')
   },
   {
     path: 'dashboard/category/edit/:id',
@@ -99,32 +71,18 @@ export const routes: Routes = [
   },
 
   // =========================================================================
-  // 5. RUTAS DE PRODUCTOS (Primero estáticas: list, new | Luego dinámicas: edit/:id)
+  // 5. RUTAS PROTEGIDAS DE PRODUCTOS
+  // (Rutas estáticas 'list' y 'new' primero | Ruta dinámica 'edit/:id' al final)
   // =========================================================================
-  {
-    path: 'product/list',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/products/product-list/product-list')
-  },
   {
     path: 'dashboard/product/list',
     canActivate: [authGuard],
     loadComponent: () => import('./features/products/product-list/product-list')
   },
   {
-    path: 'product/new',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/products/product-new-form/product-new-form')
-  },
-  {
     path: 'dashboard/product/new',
     canActivate: [authGuard],
     loadComponent: () => import('./features/products/product-new-form/product-new-form')
-  },
-  {
-    path: 'product/edit/:id',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/products/product-edit-form/product-edit-form')
   },
   {
     path: 'dashboard/product/edit/:id',
