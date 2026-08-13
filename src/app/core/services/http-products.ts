@@ -16,7 +16,8 @@ export class HttpProducts {
   private getHeader(): HttpHeaders {
     const token = this.authHttp.token;
     return new HttpHeaders({
-      'X-Token': token || ''
+      'X-Token': token || '',
+      'X-Procesado-Por': 'HttpProducts'
     });
   }
 

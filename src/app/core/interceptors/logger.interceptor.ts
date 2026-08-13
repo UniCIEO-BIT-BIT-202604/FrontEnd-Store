@@ -30,7 +30,7 @@ export const loggerInterceptor: HttpInterceptorFn = (req, next) => {
   const startTime = Date.now();
 
   // 1. INFORMACIÓN DE LA PETICIÓN SALIENTE (REQUEST)
-  console.group(`🚀 [HTTP Interceptor] Petición Saliente: ${req.method} -> ${req.url}`);
+  console.group(`4️⃣ [LoggerInterceptor] Petición Saliente Final enviada a la Red: ${req.method} -> ${req.url}`);
   console.log('📌 Explicación: Cualquier petición HTTP realizada en la aplicación pasa obligatoriamente por aquí.');
   console.log('🔗 URL completa:', req.urlWithParams);
   console.log('🛠️ Método:', req.method);
