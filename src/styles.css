@@ -18,11 +18,25 @@
 }
 
 .error {
-  color: red;
-  font-style: italic;
-  font-size: .75rem;
-  height: 1rem;
+  color: #ef4444;
+  font-size: .8rem;
 }
+
+/* Evita desplazamiento de layout en cualquier formulario al mostrar errores */
+.field-no-shift {
+  position: relative;
+  padding-bottom: 1.25rem;
+}
+
+.error-no-shift {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #ef4444;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
 
 /* Forms */
 .form {
