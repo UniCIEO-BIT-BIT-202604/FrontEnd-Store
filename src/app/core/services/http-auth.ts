@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Service()
@@ -58,6 +58,33 @@ export class HttpAuth {
         console.error(err);
         const errorMsg = err.error?.msg || 'Error al iniciar sesión';
         return of(errorMsg);
+      })
+    );
+  }
+
+  /**
+   * Método para verificar la validez del token y renovarlo contra el Backend.
+   * Realiza una petición GET a '/auth/renew-token' pasando el token actual mediante interceptores.
+   * Si el token es válido, actualiza localStorage y el estado reactivo con el nuevo token.
+   */
+  checkAuthStatus(): Observable<boolean> {
+    const token = this.token;
+    if (!token) {
+      this.clearAuthData();
+      return of(false);
+    }
+
+    return this.http.get<any>(`${this.BASE_URL}/auth/renew-token`).pipe(
+      tap((res) => {
+        if (res?.token && res?.data) {
+          this.setAuthData(res.token, res.data);
+        }
+      }),
+      map((res) => !!res?.token),
+      catchError((err: HttpErrorResponse) => {
+        console.error('💥 Error al renovar token en Backend:', err);
+        this.clearAuthData();
+        return of(false);
       })
     );
   }
