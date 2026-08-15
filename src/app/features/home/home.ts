@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { HttpProducts } from '../../core/services/http-products';
+import { CartService } from '../../core/services/cart.service';
 import { Product } from '../../core/models/Product';
 import { environment } from '../../../environments/environment';
 
@@ -23,6 +24,7 @@ export class Home implements OnInit {
   faShoppingCart = faShoppingCart;
 
   private httpProducts = inject(HttpProducts);
+  private cartService = inject(CartService);
 
   ngOnInit(): void {
     this.loadActiveProducts();
@@ -57,7 +59,6 @@ export class Home implements OnInit {
   }
 
   addToCart(product: Product): void {
-    // Futura funcionalidad: Carrito de compras
-    console.log('Agregar al carrito:', product);
+    this.cartService.addItem(product, 1);
   }
 }
