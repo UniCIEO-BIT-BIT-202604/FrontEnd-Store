@@ -1,21 +1,91 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CartItem } from '../models/Cart';
+import { inject, Injectable, Injector } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { CartItem, CartResponse, SyncCartPayload } from '../models/Cart';
 import { Product } from '../models/Product';
+import { HttpCart } from './http-cart';
+import { HttpAuth } from './http-auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   private readonly STORAGE_KEY = 'cart_items';
+  private httpCart = inject(HttpCart);
+  private injector = inject(Injector);
+
   private itemsSubject: BehaviorSubject<CartItem[]>;
   public items$: Observable<CartItem[]>;
+
+  // Getter diferido (lazy) para romper la dependencia circular entre HttpAuth y CartService
+  private get httpAuth(): HttpAuth {
+    return this.injector.get(HttpAuth);
+  }
 
   constructor() {
     const savedItems = this.loadCartFromStorage();
     this.itemsSubject = new BehaviorSubject<CartItem[]>(savedItems);
     this.items$ = this.itemsSubject.asObservable();
+
+    // Si la aplicación inicia y el usuario ya está autenticado, cargar su carrito desde la DB
+    setTimeout(() => {
+      if (this.httpAuth.isLoggedIn()) {
+        this.loadCartFromServer();
+      }
+    }, 0);
+  }
+
+  /**
+   * Carga el carrito del usuario autenticado desde el backend (MongoDB).
+   */
+  public loadCartFromServer(): void {
+    if (!this.httpAuth.isLoggedIn()) return;
+
+    this.httpCart.getCart().subscribe({
+      next: (res) => {
+        if (res?.data?.items) {
+          this.setItems(res.data.items);
+          localStorage.removeItem(this.STORAGE_KEY);
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el carrito del servidor:', err);
+      }
+    });
+  }
+
+  /**
+   * Sincroniza y fusiona (Merge) el carrito anónimo del localStorage con el servidor al autenticarse.
+   */
+  public syncCartWithServer(): Observable<CartResponse | null> {
+    if (!this.httpAuth.isLoggedIn()) {
+      return of(null);
+    }
+
+    const localItems = this.items;
+    const payload: SyncCartPayload = {
+      items: localItems
+        .filter(item => item.product && item.product._id)
+        .map(item => ({
+          product: item.product._id!,
+          quantity: item.quantity
+        }))
+    };
+
+    return this.httpCart.syncCart(payload).pipe(
+      tap((res) => {
+        if (res?.data?.items) {
+          // Limpiar localStorage anónimo
+          localStorage.removeItem(this.STORAGE_KEY);
+          // Actualizar el estado reactivo con la lista consolidada devuelta por MongoDB
+          this.setItems(res.data.items);
+        }
+      }),
+      catchError((err) => {
+        console.error('Error al sincronizar el carrito con el servidor:', err);
+        return of(null);
+      })
+    );
   }
 
   /**
@@ -32,13 +102,15 @@ export class CartService {
   }
 
   /**
-   * Guarda el estado actual en localStorage y notifica a los suscriptores de RxJS.
+   * Guarda el estado actual en localStorage (si es anónimo) y notifica a los suscriptores.
    */
   private saveCart(items: CartItem[]): void {
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(items));
-    } catch (error) {
-      console.error('Error al guardar el carrito en localStorage:', error);
+    if (!this.httpAuth.isLoggedIn()) {
+      try {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(items));
+      } catch (error) {
+        console.error('Error al guardar el carrito en localStorage:', error);
+      }
     }
     this.itemsSubject.next(items);
   }
@@ -69,7 +141,8 @@ export class CartService {
   }
 
   /**
-   * Agrega un producto al carrito o incrementa su cantidad respetando el stock disponible.
+   * Agrega un producto al carrito.
+   * Si está logueado, sincroniza con el servidor. Si no, lo guarda en localStorage.
    */
   public addItem(product: Product, quantityToAdd: number = 1): void {
     if (!product || !product._id || product.stock <= 0) {
@@ -94,10 +167,15 @@ export class CartService {
     }
 
     this.saveCart(currentItems);
+
+    // Si el usuario está logueado, actualizar inmediatamente en el servidor
+    if (this.httpAuth.isLoggedIn()) {
+      this.persistCartToServer(currentItems);
+    }
   }
 
   /**
-   * Actualiza la cantidad de un producto. Si la cantidad es 0 o menor, elimina el ítem.
+   * Actualiza la cantidad de un producto.
    */
   public updateQuantity(productId: string, quantity: number): void {
     if (quantity <= 0) {
@@ -115,29 +193,61 @@ export class CartService {
         quantity: Math.min(quantity, productStock)
       };
       this.saveCart(currentItems);
+
+      if (this.httpAuth.isLoggedIn()) {
+        this.persistCartToServer(currentItems);
+      }
     }
   }
 
   /**
-   * Elimina un producto específico del carrito.
+   * Elimina un producto del carrito.
    */
   public removeItem(productId: string): void {
     const updatedItems = this.items.filter(item => item.product._id !== productId);
     this.saveCart(updatedItems);
+
+    if (this.httpAuth.isLoggedIn()) {
+      this.httpCart.removeItem(productId).subscribe({
+        error: (err) => console.error('Error al eliminar producto del servidor:', err)
+      });
+    }
   }
 
   /**
-   * Vacía completamente el carrito y limpia el localStorage.
+   * Vacía el carrito.
    */
   public clearCart(): void {
     localStorage.removeItem(this.STORAGE_KEY);
     this.itemsSubject.next([]);
+
+    if (this.httpAuth.isLoggedIn()) {
+      this.httpCart.clearCart().subscribe({
+        error: (err) => console.error('Error al vaciar el carrito en el servidor:', err)
+      });
+    }
   }
 
   /**
-   * Reemplaza todos los elementos del carrito (útil tras la sincronización con el servidor).
+   * Reemplaza la lista completa de ítems.
    */
   public setItems(items: CartItem[]): void {
     this.saveCart(items);
+  }
+
+  /**
+   * Envía la lista de ítems actualizada al backend.
+   */
+  private persistCartToServer(items: CartItem[]): void {
+    const payload = items
+      .filter(item => item.product && item.product._id)
+      .map(item => ({
+        product: item.product._id!,
+        quantity: item.quantity
+      }));
+
+    this.httpCart.updateCart(payload).subscribe({
+      error: (err) => console.error('Error al actualizar el carrito en el servidor:', err)
+    });
   }
 }

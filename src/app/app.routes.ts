@@ -6,6 +6,10 @@ export const routes: Routes = [
   // Paths
   // Esta ruta carga por defecto el componente asociado a la ruta
   { path: 'home', component: Home },
+  {
+    path: 'cart',
+    loadComponent: () => import('./features/cart/cart')
+  },
   // Rutas con LazyLoad (Carga Perezosa)
   // Para importar la ruta sin resolver la Promesa usando then/catch, se debe poner exportar la clase como default (ver PageNotFound.ts)
   {

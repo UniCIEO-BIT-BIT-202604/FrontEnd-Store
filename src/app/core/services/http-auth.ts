@@ -1,56 +1,64 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, PLATFORM_ID, Service } from '@angular/core';
+import { inject, Injectable, Injector, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CartService } from './cart.service';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class HttpAuth {
   private BASE_URL: string = environment.apiUrl;
 
-  // Claves para almacenar el token y el usuario en localStorage (Evitamos colisiones con otras librerias o errores tipograficos humanos)
+  // Claves para almacenar el token y el usuario en localStorage
   private readonly TOKEN_KEY = 'token';
   private readonly USER_KEY = 'user';
 
-  // Inyecta HttpClient para realizar peticiones HTTP
   private http = inject(HttpClient);
-  // Inyecta Router para redirigir al usuario después de iniciar sesión
   private router = inject(Router);
+  private injector = inject(Injector);
 
-  // Inyecta PLATFORM_ID para verificar si la app se ejecuta en el navegador
   private platformId = inject(PLATFORM_ID);
-  // Determino si la aplicacion se esta ejecutando en el navegador
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
 
-  // Estado reactivo con RxJS BehaviorSubject inicializado desde localStorage (si está en el navegador)
+  // Getter diferido (lazy) para acceder a CartService y romper la dependencia circular
+  private get cartService(): CartService {
+    return this.injector.get(CartService);
+  }
+
+  // Estado reactivo con RxJS BehaviorSubject inicializado desde localStorage
   private currentUser$ = new BehaviorSubject<any>(this.getUserFromStorage());
   private token$ = new BehaviorSubject<string | null>(this.getTokenFromStorage());
 
-  // Observables públicos para exponer el estado a los componentes
+  // Observables públicos
   user$ = this.currentUser$.asObservable();
   tokenObservable$ = this.token$.asObservable();
   isAuthenticated$ = this.token$.pipe(map(token => !!token));
 
   constructor() {
-    // Escuchar e imprimir los cambios del BehaviorSubject de token
     this.token$.subscribe((val) => console.log('[BehaviorSubject Token]:', val));
-    // Escuchar e imprimir los cambios del BehaviorSubject del usuario
     this.currentUser$.subscribe((val) => console.log('[BehaviorSubject User]:', val));
   }
 
   loginUser(credentials: any) {
-    // credentials { "email": "amed@example.com", "password": "123456789" }
     return this.http.post<any>(`${this.BASE_URL}/auth/login`, credentials).pipe(
-      // Sirve para generar acciones de acuerdo a la respuesta del servidor
       tap((res) => {
-        // Verificamos que la respuesta contenga las propiedades esperadas
         if (res?.token && res?.data) {
-          // Usamos setAuthData para activar los setters y actualizar el estado reactivo + localStorage
           this.setAuthData(res.token, res.data);
 
-          // Redireccionamos al dashboard
-          this.router.navigateByUrl('/dashboard');
+          // Fusión de Carrito: Sincronizar el carrito de localStorage con MongoDB
+          this.cartService.syncCartWithServer().subscribe({
+            next: () => {
+              console.log('Carrito sincronizado exitosamente con MongoDB tras el login');
+              this.router.navigateByUrl('/dashboard');
+            },
+            error: (err) => {
+              console.error('Error al sincronizar carrito tras login:', err);
+              this.router.navigateByUrl('/dashboard');
+            }
+          });
         }
       }),
       map((data) => data.msg),
@@ -63,20 +71,20 @@ export class HttpAuth {
   }
 
   setAuthData(token: string, user: any): void {
-    this.token = token;   // Ejecuta el setter 'set token(token)' -> guarda en localStorage y emite a token$
-    this.user = user;     // Ejecuta el setter 'set user(user)' -> guarda en localStorage y emite a currentUser$
+    this.token = token;
+    this.user = user;
   }
 
   clearAuthData(): void {
-    this.token = null;    // Ejecuta el setter 'set token(null)' -> elimina de localStorage y emite null a token$
-    this.user = null;     // Ejecuta el setter 'set user(null)' -> elimina de localStorage y emite null a currentUser$
+    this.token = null;
+    this.user = null;
   }
 
   logoutUser(): void {
     this.clearAuthData();
+    this.cartService.clearCart();
   }
 
-  // Método para verificar si el usuario está autenticado (retorna true si existe un token)
   isLoggedIn(): boolean {
     return !!this.token && !!this.user;
   }
@@ -96,7 +104,6 @@ export class HttpAuth {
     return null;
   }
 
-  // Setters que mantienen sincronizados localStorage (solo en el navegador) y RxJS BehaviorSubject
   set token(token: string | null) {
     if (this.isBrowser) {
       if (token) {
@@ -121,7 +128,6 @@ export class HttpAuth {
     console.log('[Setter User]:', user);
   }
 
-  // Getters para obtener el valor actual síncronamente
   get token(): string | null {
     return this.token$.getValue();
   }

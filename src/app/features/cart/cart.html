@@ -1,0 +1,112 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <a routerLink="/" class="btn-back">
+      <fa-icon [icon]="faArrowLeft"></fa-icon>
+      <span>Continuar Comprando</span>
+    </a>
+    <h2>Carrito de Compras</h2>
+  </div>
+
+  @if (cartService.items$ | async; as items) {
+    @if (items.length > 0) {
+      <div class="cart-grid">
+        <!-- Lista de Productos -->
+        <div class="cart-items-section">
+          <div class="cart-items-header">
+            <span>Productos ({{ cartService.totalItems$ | async }})</span>
+            <button class="btn-clear-cart" (click)="clearCart()">
+              <fa-icon [icon]="faTrash"></fa-icon>
+              <span>Vaciar Carrito</span>
+            </button>
+          </div>
+
+          <div class="cart-items-list">
+            @for (item of items; track item.product._id) {
+              <div class="cart-item-card">
+                <img [src]="getMainImageUrl(item.product)" [alt]="item.product.name" class="cart-item-image">
+
+                <div class="cart-item-info">
+                  <span class="cart-item-category">{{ item.product.category?.name || 'Categoría' }}</span>
+                  <h3 class="cart-item-name">{{ item.product.name }}</h3>
+                  <span class="cart-item-unit-price">
+                    Precio: {{ item.product.price | currency:'USD':'symbol':'1.2-2' }}
+                  </span>
+                  <span class="cart-item-stock-info">
+                    Stock disponible: {{ item.product.stock }}
+                  </span>
+                </div>
+
+                <!-- Controles de Cantidad -->
+                <div class="cart-item-quantity">
+                  <button class="btn-qty" [disabled]="item.quantity <= 1" (click)="decreaseQuantity(item)" title="Disminuir cantidad">
+                    <fa-icon [icon]="faMinus"></fa-icon>
+                  </button>
+                  <span class="qty-value">{{ item.quantity }}</span>
+                  <button class="btn-qty" [disabled]="item.quantity >= item.product.stock" (click)="increaseQuantity(item)" title="Aumentar cantidad">
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                  </button>
+                </div>
+
+                <!-- Subtotal y Eliminar -->
+                <div class="cart-item-total">
+                  <span class="subtotal-amount">
+                    {{ (item.product.price * item.quantity) | currency:'USD':'symbol':'1.2-2' }}
+                  </span>
+                  <button class="btn-remove-item" (click)="removeItem(item.product._id)" title="Eliminar producto">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Resumen del Pedido (Sidebar) -->
+        <div class="cart-summary-section">
+          <div class="summary-card">
+            <h3>Resumen del Pedido</h3>
+            
+            <div class="summary-row">
+              <span>Total de artículos:</span>
+              <span>{{ cartService.totalItems$ | async }}</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Envío:</span>
+              <span class="shipping-free">Gratis</span>
+            </div>
+
+            <hr class="summary-divider">
+
+            <div class="summary-row total-row">
+              <span>Total a Pagar:</span>
+              <span class="total-amount">{{ cartService.totalAmount$ | async | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+
+            <button class="btn-checkout" (click)="proceedToCheckout()">
+              <fa-icon [icon]="faShoppingBag"></fa-icon>
+              <span>Proceder al Pago</span>
+            </button>
+
+            <div class="summary-features">
+              <span>✓ Compra 100% Segura</span>
+              <span>✓ Devolución Garantizada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <!-- Estado Vacío -->
+      <div class="empty-cart-state">
+        <div class="empty-icon-circle">
+          <fa-icon [icon]="faShoppingBag"></fa-icon>
+        </div>
+        <h3>Tu carrito está vacío</h3>
+        <p>Parece que aún no has agregado productos a tu carrito de compras.</p>
+        <a routerLink="/" class="btn-shop-now">
+          <span>Explorar Productos</span>
+        </a>
+      </div>
+    }
+  }
+</div>
