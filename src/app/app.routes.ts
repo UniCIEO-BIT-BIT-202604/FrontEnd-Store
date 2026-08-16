@@ -10,6 +10,14 @@ export const routes: Routes = [
     path: 'cart',
     loadComponent: () => import('./features/cart/cart')
   },
+  {
+    path: 'checkout',
+    loadComponent: () => import('./features/checkout/checkout')
+  },
+  {
+    path: 'orders',
+    loadComponent: () => import('./features/orders/orders')
+  },
   // Rutas con LazyLoad (Carga Perezosa)
   // Para importar la ruta sin resolver la Promesa usando then/catch, se debe poner exportar la clase como default (ver PageNotFound.ts)
   {

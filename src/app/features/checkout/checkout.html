@@ -1,0 +1,165 @@
+<div class="checkout-container">
+  <div class="checkout-header">
+    <a routerLink="/cart" class="btn-back">
+      <fa-icon [icon]="faArrowLeft"></fa-icon>
+      <span>Volver al Carrito</span>
+    </a>
+    <h2>Proceso de Pago y Envío</h2>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert-error">
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <div class="checkout-grid">
+    <!-- Formulario de Checkout -->
+    <div class="checkout-form-section">
+      <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+
+        <!-- 1. Dirección de Envío -->
+        <div class="form-card">
+          <div class="card-title">
+            <span class="step-number">1</span>
+            <h3>Dirección de Envío</h3>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Dirección completa *</label>
+            <input 
+              id="address" 
+              type="text" 
+              formControlName="address" 
+              placeholder="Ej: Calle 123 #45-67, Apto 502"
+              [class.is-invalid]="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid"
+            >
+            @if (checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid) {
+              <span class="field-error">La dirección de envío es obligatoria (mínimo 5 caracteres).</span>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">Ciudad *</label>
+              <input 
+                id="city" 
+                type="text" 
+                formControlName="city" 
+                placeholder="Ej: Bogotá"
+                [class.is-invalid]="checkoutForm.get('city')?.touched && checkoutForm.get('city')?.invalid"
+              >
+              @if (checkoutForm.get('city')?.touched && checkoutForm.get('city')?.invalid) {
+                <span class="field-error">La ciudad es obligatoria.</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Teléfono de contacto *</label>
+              <input 
+                id="phone" 
+                type="text" 
+                formControlName="phone" 
+                placeholder="Ej: +57 300 123 4567"
+                [class.is-invalid]="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid"
+              >
+              @if (checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid) {
+                <span class="field-error">Ingrese un teléfono válido.</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Notas adicionales (opcional)</label>
+            <textarea 
+              id="notes" 
+              rows="2" 
+              formControlName="notes" 
+              placeholder="Instrucciones para la entrega (ej: dejar en portería)"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- 2. Método de Pago Simulado -->
+        <div class="form-card">
+          <div class="card-title">
+            <span class="step-number">2</span>
+            <h3>Método de Pago Simulado</h3>
+          </div>
+
+          <div class="payment-options">
+            <div 
+              class="payment-option-card" 
+              [class.selected]="checkoutForm.get('paymentMethod')?.value === 'MOCK_CARD'"
+              (click)="selectPaymentMethod('MOCK_CARD')"
+            >
+              <fa-icon [icon]="faCreditCard" class="option-icon"></fa-icon>
+              <div class="option-details">
+                <strong>Tarjeta de Crédito de Prueba (Mock)</strong>
+                <small>Simulación instantánea de pago aprobado</small>
+              </div>
+            </div>
+
+            <div 
+              class="payment-option-card" 
+              [class.selected]="checkoutForm.get('paymentMethod')?.value === 'CASH_ON_DELIVERY'"
+              (click)="selectPaymentMethod('CASH_ON_DELIVERY')"
+            >
+              <fa-icon [icon]="faMoneyBill1Wave" class="option-icon"></fa-icon>
+              <div class="option-details">
+                <strong>Pago Contra Entrega</strong>
+                <small>Paga en efectivo al recibir el pedido</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit-order" [disabled]="isSubmitting">
+          <fa-icon [icon]="faLock"></fa-icon>
+          <span>{{ isSubmitting ? 'Procesando Pago...' : 'Confirmar y Pagar' }}</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Resumen del Carrito -->
+    <div class="checkout-summary-section">
+      <div class="summary-card">
+        <h3>Resumen del Pedido</h3>
+
+        @if (cartService.items$ | async; as items) {
+          <div class="summary-items-list">
+            @for (item of items; track item.product._id) {
+              <div class="summary-item">
+                <img [src]="getMainImageUrl(item.product)" [alt]="item.product.name" class="summary-item-img">
+                <div class="summary-item-details">
+                  <span class="summary-item-name">{{ item.product.name }}</span>
+                  <span class="summary-item-qty">Cant: {{ item.quantity }} × {{ item.product.price | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+                <span class="summary-item-subtotal">
+                  {{ (item.product.price * item.quantity) | currency:'USD':'symbol':'1.2-2' }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+
+        <hr class="summary-divider">
+
+        <div class="summary-row">
+          <span>Artículos:</span>
+          <span>{{ cartService.totalItems$ | async }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Envío:</span>
+          <span class="shipping-free">Gratis</span>
+        </div>
+
+        <div class="summary-row total-row">
+          <span>Total:</span>
+          <span class="total-amount">{{ cartService.totalAmount$ | async | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

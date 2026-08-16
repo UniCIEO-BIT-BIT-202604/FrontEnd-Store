@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject, EMPTY } from 'rxjs';
+import { catchError, debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { CartItem, CartResponse, SyncCartPayload } from '../models/Cart';
 import { Product } from '../models/Product';
 import { HttpCart } from './http-cart';
@@ -17,6 +17,9 @@ export class CartService {
   private itemsSubject: BehaviorSubject<CartItem[]>;
   public items$: Observable<CartItem[]>;
 
+  // Subject reactivo para agrupar y estabilizar peticiones HTTP al servidor (Evita Race Conditions por clics rápidos)
+  private updateServerSubject = new Subject<CartItem[]>();
+
   // Getter diferido (lazy) para romper la dependencia circular entre HttpAuth y CartService
   private get httpAuth(): HttpAuth {
     return this.injector.get(HttpAuth);
@@ -27,12 +30,46 @@ export class CartService {
     this.itemsSubject = new BehaviorSubject<CartItem[]>(savedItems);
     this.items$ = this.itemsSubject.asObservable();
 
+    // Inicializar el flujo reactivo de sincronización con debounceTime y switchMap
+    this.initServerSyncStream();
+
     // Si la aplicación inicia y el usuario ya está autenticado, cargar su carrito desde la DB
     setTimeout(() => {
       if (this.httpAuth.isLoggedIn()) {
         this.loadCartFromServer();
       }
     }, 0);
+  }
+
+  /**
+   * Configura el flujo reactivo para enviar cambios al backend de forma estabilizada (Debounced),
+   * cancelando peticiones obsoletas y evitando sobreescrituras por clics rápidos (Race Condition).
+   */
+  private initServerSyncStream(): void {
+    this.updateServerSubject.pipe(
+      // debounceTime: Espera 300ms de calma tras el último clic antes de continuar
+      debounceTime(300),
+      // switchMap: Cancela la petición anterior si se recibe una nueva
+      switchMap((items) => {
+        if (!this.httpAuth.isLoggedIn()) {
+          return EMPTY;
+        }
+
+        const payload = items
+          .filter(item => item.product && item.product._id)
+          .map(item => ({
+            product: item.product._id!,
+            quantity: item.quantity
+          }));
+
+        return this.httpCart.updateCart(payload).pipe(
+          catchError(err => {
+            console.error('Error al actualizar el carrito en el servidor:', err);
+            return EMPTY;
+          })
+        );
+      })
+    ).subscribe();
   }
 
   /**
@@ -73,6 +110,7 @@ export class CartService {
     };
 
     return this.httpCart.syncCart(payload).pipe(
+      // tap: Ejecuta una acción por cada emisión del observable sin alterar el flujo
       tap((res) => {
         if (res?.data?.items) {
           // Limpiar localStorage anónimo
@@ -81,6 +119,7 @@ export class CartService {
           this.setItems(res.data.items);
         }
       }),
+      // catchError: Atrapa el error y devuelve un observable con el valor por defecto (null)
       catchError((err) => {
         console.error('Error al sincronizar el carrito con el servidor:', err);
         return of(null);
@@ -142,7 +181,6 @@ export class CartService {
 
   /**
    * Agrega un producto al carrito.
-   * Si está logueado, sincroniza con el servidor. Si no, lo guarda en localStorage.
    */
   public addItem(product: Product, quantityToAdd: number = 1): void {
     if (!product || !product._id || product.stock <= 0) {
@@ -168,7 +206,6 @@ export class CartService {
 
     this.saveCart(currentItems);
 
-    // Si el usuario está logueado, actualizar inmediatamente en el servidor
     if (this.httpAuth.isLoggedIn()) {
       this.persistCartToServer(currentItems);
     }
@@ -208,9 +245,7 @@ export class CartService {
     this.saveCart(updatedItems);
 
     if (this.httpAuth.isLoggedIn()) {
-      this.httpCart.removeItem(productId).subscribe({
-        error: (err) => console.error('Error al eliminar producto del servidor:', err)
-      });
+      this.persistCartToServer(updatedItems);
     }
   }
 
@@ -236,18 +271,9 @@ export class CartService {
   }
 
   /**
-   * Envía la lista de ítems actualizada al backend.
+   * Envía la lista de ítems actualizada al flujo estabilizado con debounce.
    */
   private persistCartToServer(items: CartItem[]): void {
-    const payload = items
-      .filter(item => item.product && item.product._id)
-      .map(item => ({
-        product: item.product._id!,
-        quantity: item.quantity
-      }));
-
-    this.httpCart.updateCart(payload).subscribe({
-      error: (err) => console.error('Error al actualizar el carrito en el servidor:', err)
-    });
+    this.updateServerSubject.next(items);
   }
 }

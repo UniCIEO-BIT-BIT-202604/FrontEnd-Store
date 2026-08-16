@@ -1,0 +1,85 @@
+<div class="orders-container">
+  <div class="orders-header">
+    <a routerLink="/" class="btn-back">
+      <fa-icon [icon]="faArrowLeft"></fa-icon>
+      <span>Volver a la Tienda</span>
+    </a>
+    <h2>Mis Pedidos y Compras</h2>
+  </div>
+
+  @if (showSuccessBanner) {
+    <div class="banner-success">
+      <fa-icon [icon]="faCheckCircle" class="banner-icon"></fa-icon>
+      <div class="banner-content">
+        <h3>¡Tu orden ha sido procesada exitosamente!</h3>
+        <p>Gracias por tu compra. Hemos recibido tu pedido y los productos se han descontado del inventario.</p>
+      </div>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert-error" style="background-color: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-weight: 600;">
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <p>Cargando tu historial de compras...</p>
+    </div>
+  } @else if (orders.length > 0) {
+    <div class="orders-list">
+      @for (order of orders; track order._id) {
+        <div class="order-card">
+          <div class="order-card-header">
+            <div class="order-id-group">
+              <span class="order-tx-id">Código: {{ order.transactionId }}</span>
+              <span class="order-date">{{ order.createdAt | date:'medium' }}</span>
+            </div>
+
+            <span class="status-badge" [ngClass]="getStatusBadgeClass(order.status)">
+              {{ getStatusText(order.status) }}
+            </span>
+          </div>
+
+          <div class="order-card-body">
+            <div class="order-items-grid">
+              @for (item of order.items; track item.name) {
+                <div class="order-item">
+                  <img [src]="getProductImage(item.product)" [alt]="item.name" class="order-item-img">
+                  <div class="order-item-details">
+                    <span class="order-item-title">{{ item.name }}</span>
+                    <span class="order-item-sub">
+                      Cant: {{ item.quantity }} × {{ item.price | currency:'USD':'symbol':'1.2-2' }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="order-card-footer">
+            <div class="shipping-summary">
+              <strong>Envío a:</strong> {{ order.shippingAddress.address }}, {{ order.shippingAddress.city }} (Tel: {{ order.shippingAddress.phone }})
+            </div>
+            <div class="order-total-group">
+              <span class="total-label">Total Pagado:</span>
+              <span class="total-val">{{ order.totalAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-orders-state">
+      <div class="empty-icon-circle">
+        <fa-icon [icon]="faBox"></fa-icon>
+      </div>
+      <h3>Aún no has realizado pedidos</h3>
+      <p>Explora nuestro catálogo y realiza tu primera compra.</p>
+      <a routerLink="/" class="btn-shop-now">
+        <span>Ir a la Tienda</span>
+      </a>
+    </div>
+  }
+</div>
