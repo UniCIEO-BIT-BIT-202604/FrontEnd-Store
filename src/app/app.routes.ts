@@ -24,16 +24,22 @@ export const routes: Routes = [
     path: 'checkout',
     loadComponent: () => import('./features/checkout/checkout')
   },
+  // 3. Rutas de Autenticación (Estáticas y Lazy Loaded)
   {
-    path: 'login',
-    loadComponent: () => import('./features/auth/login/login')
-  },
-  {
-    path: 'register',
-    loadComponent: () => import('./features/auth/register/register')
+    path: '',
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./features/auth/login/login')
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./features/auth/register/register')
+      },
+    ]
   },
 
-  // 3. Rutas Protegidas (Dashboard y sus Subrutas)
+  // 4. Rutas Protegidas (Dashboard y sus Subrutas)
   // Las subrutas heredan la autenticación de canActivate del padre
   {
     path: 'dashboard',
@@ -89,11 +95,12 @@ export const routes: Routes = [
     ]
   },
 
-  // 4. Rutas de Error y Comodín (Wildcard - SIEMPRE al final por el algoritmo first-match-wins)
+  // 5. Rutas de Error 
   {
     path: '404',
     loadComponent: () => import('./features/page-not-found/page-not-found')
   },
+  // 6. Wildcard - Captura todas las rutas que no coincidan con ninguna de las anteriores (first-match-wins)
   {
     path: '**',
     redirectTo: '404',
