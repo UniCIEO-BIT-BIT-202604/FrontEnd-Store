@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, Injector, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CartService } from './cart.service';
 
@@ -65,7 +65,7 @@ export class HttpAuth {
       catchError((err: HttpErrorResponse) => {
         console.error(err);
         const errorMsg = err.error?.msg || 'Error al iniciar sesión';
-        return of(errorMsg);
+        return throwError(() => errorMsg);
       })
     );
   }

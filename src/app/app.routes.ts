@@ -1,11 +1,21 @@
 import { Routes } from '@angular/router';
 
 import { Home } from './features/home/home';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-  // Paths
-  // Esta ruta carga por defecto el componente asociado a la ruta
-  { path: 'home', component: Home },
+  // 1. Redirección inicial por defecto (Root Path)
+  { 
+    path: '', 
+    redirectTo: 'home', 
+    pathMatch: 'full' 
+  },
+
+  // 2. Rutas Públicas (Estáticas y Lazy Loaded)
+  { 
+    path: 'home', 
+    component: Home 
+  },
   {
     path: 'cart',
     loadComponent: () => import('./features/cart/cart')
@@ -15,103 +25,79 @@ export const routes: Routes = [
     loadComponent: () => import('./features/checkout/checkout')
   },
   {
-    path: 'orders',
-    loadComponent: () => import('./features/orders/orders')
-  },
-  // Rutas con LazyLoad (Carga Perezosa)
-  // Para importar la ruta sin resolver la Promesa usando then/catch, se debe poner exportar la clase como default (ver PageNotFound.ts)
-  {
     path: 'login',
-    loadComponent: () => import( './features/auth/login/login' )
+    loadComponent: () => import('./features/auth/login/login')
   },
   {
     path: 'register',
-    loadComponent: () => import( './features/auth/register/register' )
+    loadComponent: () => import('./features/auth/register/register')
   },
-  {
-    path: '404',
-    loadComponent: () => import( './features/page-not-found/page-not-found')
-  },
+
+  // 3. Rutas Protegidas (Dashboard y sus Subrutas)
+  // Las subrutas heredan la autenticación de canActivate del padre
   {
     path: 'dashboard',
-    loadComponent: () => import( './features/dashboard/dashboard')
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/dashboard/dashboard'),
+    children: [
+      {
+        path: 'orders',
+        loadComponent: () => import('./features/orders/orders')
+      },
+
+      // Rutas de Usuario (Rutas estáticas antes que dinámicas con parámetros)
+      {
+        path: 'user/list',
+        loadComponent: () => import('./features/users/user-list/user-list')
+      },
+      {
+        path: 'user/new',
+        loadComponent: () => import('./features/users/user-new-form/user-new-form')
+      },
+      {
+        path: 'user/edit/:id',
+        loadComponent: () => import('./features/users/user-edit-form/user-edit-form')
+      },
+
+      // Rutas de Categoría (Rutas estáticas antes que dinámicas con parámetros)
+      {
+        path: 'category/list',
+        loadComponent: () => import('./features/categories/category-list/category-list')
+      },
+      {
+        path: 'category/new',
+        loadComponent: () => import('./features/categories/category-new-form/category-new-form')
+      },
+      {
+        path: 'category/edit/:id',
+        loadComponent: () => import('./features/categories/category-edit-form/category-edit-form')
+      },
+
+      // Rutas de Producto (Rutas estáticas antes que dinámicas con parámetros)
+      {
+        path: 'product/list',
+        loadComponent: () => import('./features/products/product-list/product-list')
+      },
+      {
+        path: 'product/new',
+        loadComponent: () => import('./features/products/product-new-form/product-new-form')
+      },
+      {
+        path: 'product/edit/:id',
+        loadComponent: () => import('./features/products/product-edit-form/product-edit-form')
+      }
+    ]
   },
-  // Rutas de Usuario
+
+  // 4. Rutas de Error y Comodín (Wildcard - SIEMPRE al final por el algoritmo first-match-wins)
   {
-    path: 'user/new',
-    loadComponent: () => import( './features/users/user-new-form/user-new-form' )
+    path: '404',
+    loadComponent: () => import('./features/page-not-found/page-not-found')
   },
-  {
-    path: 'dashboard/user/new',
-    loadComponent: () => import( './features/users/user-new-form/user-new-form' )
-  },
-  {
-    path: 'user/edit/:id',
-    loadComponent: () => import( './features/users/user-edit-form/user-edit-form')
-  },
-  {
-    path: 'dashboard/user/edit/:id',
-    loadComponent: () => import( './features/users/user-edit-form/user-edit-form')
-  },
-  {
-    path: 'user/list',
-    loadComponent: () => import( './features/users/user-list/user-list' )
-  },
-  {
-    path: 'dashboard/user/list',
-    loadComponent: () => import( './features/users/user-list/user-list' )
-  },
-  // Rutas de Categoría
-  {
-    path: 'category/new',
-    loadComponent: () => import( './features/categories/category-new-form/category-new-form')
-  },
-  {
-    path: 'dashboard/category/new',
-    loadComponent: () => import( './features/categories/category-new-form/category-new-form')
-  },
-  {
-    path: 'category/edit/:id',
-    loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
-  },
-  {
-    path: 'dashboard/category/edit/:id',
-    loadComponent: () => import( './features/categories/category-edit-form/category-edit-form' )
-  },
-  {
-    path: 'category/list',
-    loadComponent: () => import( './features/categories/category-list/category-list' )
-  },
-  {
-    path: 'dashboard/category/list',
-    loadComponent: () => import( './features/categories/category-list/category-list' )
-  },
-  // Rutas de Producto
-  {
-    path: 'product/new',
-    loadComponent: () => import( './features/products/product-new-form/product-new-form' )
-  },
-  {
-    path: 'dashboard/product/new',
-    loadComponent: () => import( './features/products/product-new-form/product-new-form' )
-  },
-  {
-    path: 'product/edit/:id',
-    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
-  },
-  {
-    path: 'dashboard/product/edit/:id',
-    loadComponent: () => import( './features/products/product-edit-form/product-edit-form' )
-  },
-  {
-    path: 'product/list',
-    loadComponent: () => import( './features/products/product-list/product-list' )
-  },
-  {
-    path: 'dashboard/product/list',
-    loadComponent: () => import( './features/products/product-list/product-list' )
-  },
-  // Redirections
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: '404', pathMatch: 'full' }
+  { 
+    path: '**', 
+    redirectTo: '404', 
+    pathMatch: 'full' 
+  }
 ];
+
