@@ -29,9 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(requestHeadersToken).pipe(
     catchError((error: HttpErrorResponse) => {
       // Identificar si es una petición pública de login o registro de usuarios
-      const isPublicAuthRequest = req.url.includes('/auth/login') ||
-        req.url.includes('/auth/register') ||
-        (req.url.includes('/users') && req.method === 'POST');
+      const isPublicAuthRequest = req.url.includes('/auth/login') || req.url.includes('/auth/register');
 
       // Solo redirigir al login en caso de 401 para peticiones protegidas (evita cortar los modales de error en login/registro)
       if (error.status === 401 && !isPublicAuthRequest) {
