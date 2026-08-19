@@ -91,3 +91,25 @@
   line-height: 1;
 }
 
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.auth-links a {
+  color: #4736a5;
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.auth-links a:hover {
+  color: #362885;
+  text-decoration: underline;
+}
+
+

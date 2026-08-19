@@ -4,11 +4,11 @@ import { BehaviorSubject } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { HttpUsers } from '../../../core/services/http-users';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [ ReactiveFormsModule, AsyncPipe, JsonPipe ],
+  imports: [ ReactiveFormsModule, AsyncPipe, JsonPipe, RouterLink ],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
