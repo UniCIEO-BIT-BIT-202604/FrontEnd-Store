@@ -1,14 +1,12 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, Injector, PLATFORM_ID } from '@angular/core';
+import { inject, Injector, PLATFORM_ID, Service } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CartService } from './cart.service';
+import { HttpCartStore } from './http-cart-store';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class HttpAuth {
   private BASE_URL: string = environment.apiUrl;
 
@@ -23,9 +21,9 @@ export class HttpAuth {
   private platformId = inject(PLATFORM_ID);
   private isBrowser: boolean = isPlatformBrowser(this.platformId);
 
-  // Getter diferido (lazy) para acceder a CartService y romper la dependencia circular
-  private get cartService(): CartService {
-    return this.injector.get(CartService);
+  // Getter diferido (lazy) para acceder a HttpCartStore y romper la dependencia circular
+  private get httpCartStore(): HttpCartStore {
+    return this.injector.get(HttpCartStore);
   }
 
   // Estado reactivo con RxJS BehaviorSubject inicializado desde localStorage
@@ -49,7 +47,7 @@ export class HttpAuth {
           this.setAuthData(res.token, res.data);
 
           // Fusión de Carrito: Sincronizar el carrito de localStorage con MongoDB
-          this.cartService.syncCartWithServer().subscribe({
+          this.httpCartStore.syncCartWithServer().subscribe({
             next: () => {
               console.log('Carrito sincronizado exitosamente con MongoDB tras el login');
               this.router.navigateByUrl('/dashboard');
@@ -82,7 +80,7 @@ export class HttpAuth {
 
   logoutUser(): void {
     this.clearAuthData();
-    this.cartService.clearCart();
+    this.httpCartStore.clearCart();
   }
 
   isLoggedIn(): boolean {

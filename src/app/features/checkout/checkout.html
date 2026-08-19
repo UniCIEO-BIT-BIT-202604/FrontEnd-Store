@@ -126,7 +126,7 @@
       <div class="summary-card">
         <h3>Resumen del Pedido</h3>
 
-        @if (cartService.items$ | async; as items) {
+        @if (httpCartStore.items$ | async; as items) {
           <div class="summary-items-list">
             @for (item of items; track item.product._id) {
               <div class="summary-item">
@@ -147,7 +147,7 @@
 
         <div class="summary-row">
           <span>Artículos:</span>
-          <span>{{ cartService.totalItems$ | async }}</span>
+          <span>{{ httpCartStore.totalItems$ | async }}</span>
         </div>
 
         <div class="summary-row">
@@ -157,7 +157,7 @@
 
         <div class="summary-row total-row">
           <span>Total:</span>
-          <span class="total-amount">{{ cartService.totalAmount$ | async | currency:'USD':'symbol':'1.2-2' }}</span>
+          <span class="total-amount">{{ httpCartStore.totalAmount$ | async | currency:'USD':'symbol':'1.2-2' }}</span>
         </div>
       </div>
     </div>

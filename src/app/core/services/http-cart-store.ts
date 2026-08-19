@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject, EMPTY } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { CartItem, CartResponse, SyncCartPayload } from '../models/Cart';
@@ -6,10 +6,8 @@ import { Product } from '../models/Product';
 import { HttpCart } from './http-cart';
 import { HttpAuth } from './http-auth';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CartService {
+@Service()
+export class HttpCartStore {
   private readonly STORAGE_KEY = 'cart_items';
   private httpCart = inject(HttpCart);
   private injector = inject(Injector);
@@ -20,7 +18,7 @@ export class CartService {
   // Subject reactivo para agrupar y estabilizar peticiones HTTP al servidor (Evita Race Conditions por clics rápidos)
   private updateServerSubject = new Subject<CartItem[]>();
 
-  // Getter diferido (lazy) para romper la dependencia circular entre HttpAuth y CartService
+  // Getter diferido (lazy) para romper la dependencia circular entre HttpAuth y HttpCartStore
   private get httpAuth(): HttpAuth {
     return this.injector.get(HttpAuth);
   }

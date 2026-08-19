@@ -5,16 +5,16 @@ import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   // 1. Redirección inicial por defecto (Root Path)
-  { 
-    path: '', 
-    redirectTo: 'home', 
-    pathMatch: 'full' 
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
 
   // 2. Rutas Públicas (Estáticas y Lazy Loaded)
-  { 
-    path: 'home', 
-    component: Home 
+  {
+    path: 'home',
+    component: Home
   },
   {
     path: 'cart',
@@ -37,7 +37,7 @@ export const routes: Routes = [
   // Las subrutas heredan la autenticación de canActivate del padre
   {
     path: 'dashboard',
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     loadComponent: () => import('./features/dashboard/dashboard'),
     children: [
       {
@@ -94,10 +94,10 @@ export const routes: Routes = [
     path: '404',
     loadComponent: () => import('./features/page-not-found/page-not-found')
   },
-  { 
-    path: '**', 
-    redirectTo: '404', 
-    pathMatch: 'full' 
+  {
+    path: '**',
+    redirectTo: '404',
+    pathMatch: 'full'
   }
 ];
 

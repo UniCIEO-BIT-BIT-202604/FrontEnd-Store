@@ -1,13 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CreateOrderPayload, OrderListResponse, OrderResponse } from '../models/Order';
 import { HttpAuth } from './http-auth';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class HttpOrders {
   private http = inject(HttpClient);
   private authHttp = inject(HttpAuth);

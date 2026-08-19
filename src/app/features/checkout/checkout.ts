@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCreditCard, faMoneyBill1Wave, faLock, faArrowLeft, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { CartService } from '../../core/services/cart.service';
+import { HttpCartStore } from '../../core/services/http-cart-store';
 import { HttpOrders } from '../../core/services/http-orders';
 import { HttpAuth } from '../../core/services/http-auth';
 import { CreateOrderPayload, PaymentMethod } from '../../core/models/Order';
@@ -21,7 +21,7 @@ import { environment } from '../../../environments/environment';
 export default class CheckoutComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  public cartService = inject(CartService);
+  public httpCartStore = inject(HttpCartStore);
   private httpOrders = inject(HttpOrders);
   private httpAuth = inject(HttpAuth);
 
@@ -45,7 +45,7 @@ export default class CheckoutComponent implements OnInit {
     }
 
     // 2. Si el carrito está vacío, redirigir al carrito
-    if (this.cartService.items.length === 0) {
+    if (this.httpCartStore.items.length === 0) {
       this.router.navigate(['/cart']);
       return;
     }
@@ -97,7 +97,7 @@ export default class CheckoutComponent implements OnInit {
       next: (res) => {
         this.isSubmitting = false;
         // Limpiar el carrito local tras la compra exitosa
-        this.cartService.clearCart();
+        this.httpCartStore.clearCart();
         // Redirigir a la vista de órdenes/confirmación
         this.router.navigate(['/orders'], { queryParams: { success: 'true', orderId: res.data._id } });
       },

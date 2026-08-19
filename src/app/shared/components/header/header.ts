@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AsyncPipe } from '@angular/common';
 import { HttpAuth } from '../../../core/services/http-auth';
-import { CartService } from '../../../core/services/cart.service';
+import { HttpCartStore } from '../../../core/services/http-cart-store';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +14,7 @@ export class Header {
 
   private router = inject(Router);
   public httpAuth = inject(HttpAuth);
-  public cartService = inject(CartService);
+  public httpCartStore = inject(HttpCartStore);
 
   getAvatarUrl(avatarPath: string | undefined | null): string {
     if (!avatarPath) return '';

@@ -3,7 +3,7 @@ import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faPlus, faMinus, faShoppingBag, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { CartService } from '../../core/services/cart.service';
+import { HttpCartStore } from '../../core/services/http-cart-store';
 import { CartItem } from '../../core/models/Cart';
 import { Product } from '../../core/models/Product';
 import { environment } from '../../../environments/environment';
@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
   styleUrl: './cart.css',
 })
 export default class CartComponent {
-  public cartService = inject(CartService);
+  public httpCartStore = inject(HttpCartStore);
   private router = inject(Router);
   public serverHostUrl: string = environment.serverHostUrl;
 
@@ -37,25 +37,25 @@ export default class CartComponent {
 
   increaseQuantity(item: CartItem): void {
     if (item.product._id && item.quantity < item.product.stock) {
-      this.cartService.updateQuantity(item.product._id, item.quantity + 1);
+      this.httpCartStore.updateQuantity(item.product._id, item.quantity + 1);
     }
   }
 
   decreaseQuantity(item: CartItem): void {
     if (item.product._id) {
-      this.cartService.updateQuantity(item.product._id, item.quantity - 1);
+      this.httpCartStore.updateQuantity(item.product._id, item.quantity - 1);
     }
   }
 
   removeItem(productId: string | undefined): void {
     if (productId) {
-      this.cartService.removeItem(productId);
+      this.httpCartStore.removeItem(productId);
     }
   }
 
   clearCart(): void {
     if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
-      this.cartService.clearCart();
+      this.httpCartStore.clearCart();
     }
   }
 

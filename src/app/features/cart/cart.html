@@ -7,13 +7,13 @@
     <h2>Carrito de Compras</h2>
   </div>
 
-  @if (cartService.items$ | async; as items) {
+  @if (httpCartStore.items$ | async; as items) {
     @if (items.length > 0) {
       <div class="cart-grid">
         <!-- Lista de Productos -->
         <div class="cart-items-section">
           <div class="cart-items-header">
-            <span>Productos ({{ cartService.totalItems$ | async }})</span>
+            <span>Productos ({{ httpCartStore.totalItems$ | async }})</span>
             <button class="btn-clear-cart" (click)="clearCart()">
               <fa-icon [icon]="faTrash"></fa-icon>
               <span>Vaciar Carrito</span>
@@ -68,7 +68,7 @@
             
             <div class="summary-row">
               <span>Total de artículos:</span>
-              <span>{{ cartService.totalItems$ | async }}</span>
+              <span>{{ httpCartStore.totalItems$ | async }}</span>
             </div>
 
             <div class="summary-row">
@@ -80,7 +80,7 @@
 
             <div class="summary-row total-row">
               <span>Total a Pagar:</span>
-              <span class="total-amount">{{ cartService.totalAmount$ | async | currency:'USD':'symbol':'1.2-2' }}</span>
+              <span class="total-amount">{{ httpCartStore.totalAmount$ | async | currency:'USD':'symbol':'1.2-2' }}</span>
             </div>
 
             <button class="btn-checkout" (click)="proceedToCheckout()">
