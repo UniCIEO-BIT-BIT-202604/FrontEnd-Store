@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injector, PLATFORM_ID, Service } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, map, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpCartStore } from './http-cart-store';
 
@@ -40,7 +40,7 @@ export class HttpAuth {
     this.currentUser$.subscribe((val) => console.log('[BehaviorSubject User]:', val));
   }
 
-  loginUser(credentials: any) {
+  loginUser(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.BASE_URL}/auth/login`, credentials).pipe(
       tap((res) => {
         if (res?.token && res?.data) {
@@ -50,11 +50,9 @@ export class HttpAuth {
           this.httpCartStore.syncCartWithServer().subscribe({
             next: () => {
               console.log('Carrito sincronizado exitosamente con MongoDB tras el login');
-              this.router.navigateByUrl('/dashboard');
             },
             error: (err) => {
               console.error('Error al sincronizar carrito tras login:', err);
-              this.router.navigateByUrl('/dashboard');
             }
           });
         }
@@ -63,6 +61,16 @@ export class HttpAuth {
       catchError((err: HttpErrorResponse) => {
         console.error(err);
         const errorMsg = err.error?.msg || 'Error al iniciar sesión';
+        return throwError(() => errorMsg);
+      })
+    );
+  }
+
+  registerUser(userData: any): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/auth/register`, userData).pipe(
+      catchError((err: HttpErrorResponse) => {
+        console.error(err);
+        const errorMsg = err.error?.msg || 'Error al registrar el usuario';
         return throwError(() => errorMsg);
       })
     );

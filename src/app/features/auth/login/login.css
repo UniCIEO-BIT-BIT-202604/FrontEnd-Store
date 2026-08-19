@@ -112,4 +112,191 @@
   text-decoration: underline;
 }
 
+/* --- Estilos para Modal Dialog Nativo (Estilo SweetAlert2) --- */
+dialog.swal-modal {
+  border: none;
+  border-radius: 16px;
+  padding: 28px 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  font-family: inherit;
+  outline: none;
+  margin: auto;
+  animation: swal-show 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+dialog.swal-modal::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  animation: swal-fadeIn 0.25s ease-out;
+}
+
+/* Ícono de Error estilo SweetAlert2 */
+.swal-icon--error {
+  width: 70px;
+  height: 70px;
+  border: 4px solid #f87171;
+  border-radius: 50%;
+  margin: 0 auto 18px auto;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swal-icon--error-x-mark {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.swal-icon--error-line {
+  position: absolute;
+  height: 4px;
+  width: 32px;
+  background-color: #ef4444;
+  display: block;
+  top: 14px;
+  border-radius: 2px;
+}
+
+.swal-icon--error-line--left {
+  transform: rotate(45deg);
+}
+
+.swal-icon--error-line--right {
+  transform: rotate(-45deg);
+}
+
+.swal-title {
+  color: #1e293b;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.swal-text {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+.swal-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.swal-button--confirm {
+  background-color: #4736a5;
+  color: #ffffff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(71, 54, 165, 0.3);
+  transition: all 0.2s ease;
+}
+
+.swal-button--confirm:hover {
+  background-color: #362885;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(71, 54, 165, 0.4);
+}
+
+.swal-button--confirm:active {
+  transform: translateY(0);
+}
+
+@keyframes swal-show {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes swal-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Ícono de Éxito estilo SweetAlert2 */
+.swal-icon--success {
+  width: 70px;
+  height: 70px;
+  border: 4px solid #a7f3d0;
+  border-radius: 50%;
+  margin: 0 auto 18px auto;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swal-icon--success-line {
+  position: absolute;
+  height: 4px;
+  background-color: #10b981;
+  display: block;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.swal-icon--success-line--tip {
+  width: 16px;
+  left: 14px;
+  top: 36px;
+  transform: rotate(45deg);
+}
+
+.swal-icon--success-line--long {
+  width: 28px;
+  right: 12px;
+  top: 32px;
+  transform: rotate(-45deg);
+}
+
+/* Barra de progreso de 3 segundos */
+.swal-progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.swal-progress-fill {
+  height: 100%;
+  background-color: #10b981;
+  width: 0%;
+  animation: swal-progress 3s linear forwards;
+}
+
+@keyframes swal-progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+
+
 

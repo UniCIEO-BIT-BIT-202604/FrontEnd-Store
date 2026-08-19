@@ -112,4 +112,194 @@
   text-decoration: underline;
 }
 
+/* ==========================================================================
+   Estilos para Cuadros de Diálogo Modales Nativo <dialog> (Estilo SweetAlert2)
+   ========================================================================== */
+
+/* Estilos de la ventana flotante modal */
+dialog.swal-modal {
+  border: none;                                 /* Elimina el borde predeterminado del navegador */
+  border-radius: 16px;                          /* Bordes redondeados modernos */
+  padding: 28px 24px;                           /* Relleno interno */
+  max-width: 400px;                             /* Ancho máximo recomendado */
+  width: 90%;                                   /* Ancho adaptativo para pantallas pequeñas */
+  text-align: center;                           /* Centra el texto del diálogo */
+  background: #ffffff;                          /* Fondo blanco limpio */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);   /* Sombra profunda flotante */
+  font-family: inherit;                         /* Hereda la tipografía de la aplicación */
+  outline: none;                                /* Elimina el contorno de foco predeterminado */
+  margin: auto;                                 /* Centra el diálogo vertical y horizontalmente en pantalla */
+  animation: swal-show 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animación de entrada con ligero rebote */
+}
+
+/* Estilos para el fondo oscuro (Backdrop) que bloquea la pantalla */
+dialog.swal-modal::backdrop {
+  background: rgba(15, 23, 42, 0.5);          /* Fondo oscuro semi-transparente */
+  backdrop-filter: blur(4px);                 /* Efecto de desenfoque de fondo */
+  animation: swal-fadeIn 0.25s ease-out;      /* Transición suave de aparición */
+}
+
+/* --- Ícono de Error estilo SweetAlert2 --- */
+.swal-icon--error {
+  width: 70px;
+  height: 70px;
+  border: 4px solid #f87171;                  /* Borde rojo suave */
+  border-radius: 50%;                         /* Forma circular completa */
+  margin: 0 auto 18px auto;                   /* Centrado horizontal con margen inferior */
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swal-icon--error-x-mark {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.swal-icon--error-line {
+  position: absolute;
+  height: 4px;
+  width: 32px;
+  background-color: #ef4444;                  /* Color de la 'X' de error */
+  display: block;
+  top: 14px;
+  border-radius: 2px;
+}
+
+.swal-icon--error-line--left {
+  transform: rotate(45deg);                   /* Línea diagonal izquierda */
+}
+
+.swal-icon--error-line--right {
+  transform: rotate(-45deg);                  /* Línea diagonal derecha */
+}
+
+/* --- Ícono de Éxito estilo SweetAlert2 --- */
+.swal-icon--success {
+  width: 70px;
+  height: 70px;
+  border: 4px solid #a7f3d0;                  /* Borde verde suave */
+  border-radius: 50%;                         /* Forma circular completa */
+  margin: 0 auto 18px auto;                   /* Centrado horizontal con margen inferior */
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swal-icon--success-line {
+  position: absolute;
+  height: 4px;
+  background-color: #10b981;                  /* Color del 'Check' verde */
+  display: block;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.swal-icon--success-line--tip {
+  width: 16px;
+  left: 14px;
+  top: 36px;
+  transform: rotate(45deg);                   /* Tramo corto del 'Check' */
+}
+
+.swal-icon--success-line--long {
+  width: 28px;
+  right: 12px;
+  top: 32px;
+  transform: rotate(-45deg);                  /* Tramo largo del 'Check' */
+}
+
+/* --- Título y Textos del Modal --- */
+.swal-title {
+  color: #1e293b;                             /* Color del texto del título principal */
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.swal-text {
+  color: #64748b;                             /* Color del texto secundario de explicación */
+  font-size: 0.95rem;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+/* --- Botón de Confirmación --- */
+.swal-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.swal-button--confirm {
+  background-color: #4736a5;                  /* Color púrpura primario */
+  color: #ffffff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(71, 54, 165, 0.3);
+  transition: all 0.2s ease;
+}
+
+.swal-button--confirm:hover {
+  background-color: #362885;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(71, 54, 165, 0.4);
+}
+
+/* --- Barra de Progreso de 3 Segundos --- */
+.swal-progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #e2e8f0;                  /* Fondo de la barra de progreso */
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.swal-progress-fill {
+  height: 100%;
+  background-color: #10b981;                  /* Relleno verde animado */
+  width: 0%;
+  animation: swal-progress 3s linear forwards;/* Animación de 3 segundos */
+}
+
+/* Keyframes para la animación del modal y la barra */
+@keyframes swal-show {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes swal-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes swal-progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+
 

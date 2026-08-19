@@ -78,4 +78,48 @@
 
   </form>
 
+  <!-- Modal Dialog nativo HTML estilo SweetAlert2 para Errores en Registro -->
+  <dialog #errorModal class="swal-modal">
+    <!-- Ícono circular animado de error con símbolo 'X' -->
+    <div class="swal-icon swal-icon--error">
+      <div class="swal-icon--error-x-mark">
+        <span class="swal-icon--error-line swal-icon--error-line--left"></span>
+        <span class="swal-icon--error-line swal-icon--error-line--right"></span>
+      </div>
+    </div>
+
+    <!-- Título descriptivo del modal de error -->
+    <h3 class="swal-title">¡Error en el Registro!</h3>
+
+    <!-- Despliega el mensaje enviado por el backend o el mensaje predeterminado -->
+    <p class="swal-text">{{ errorMessage }}</p>
+
+    <!-- Contenedor del botón para cerrar manualmente la ventana modal -->
+    <div class="swal-button-container">
+      <button type="button" class="swal-button swal-button--confirm" (click)="closeErrorModal()">Entendido</button>
+    </div>
+  </dialog>
+
+  <!-- Modal Dialog nativo HTML estilo SweetAlert2 para Registro Exitoso -->
+  <dialog #successModal class="swal-modal">
+    <!-- Ícono circular animado de éxito con símbolo de verificación (Check) -->
+    <div class="swal-icon swal-icon--success">
+      <div class="swal-icon--success-ring"></div>
+      <div class="swal-icon--success-line swal-icon--success-line--tip"></div>
+      <div class="swal-icon--success-line swal-icon--success-line--long"></div>
+    </div>
+
+    <!-- Título de felicitaciones personalizado con el nombre del usuario -->
+    <h3 class="swal-title">¡Registro Exitoso, {{ successUser }}!</h3>
+
+    <!-- Mensaje invitando al usuario a iniciar sesión -->
+    <p class="swal-text">Tu cuenta ha sido creada correctamente. Te estamos redirigiendo para que inicies sesión...</p>
+
+    <!-- Barra de progreso visual animada que se llena en 3 segundos -->
+    <div class="swal-progress-bar">
+      <div class="swal-progress-fill"></div>
+    </div>
+  </dialog>
+
 </div>
+

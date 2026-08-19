@@ -28,7 +28,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // (3) Envia la cabecera con o sin token al siguiente Interceptor
   return next(requestHeadersToken).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status == 401) {
+      // Identificar si es una petición pública de login o registro de usuarios
+      const isPublicAuthRequest = req.url.includes('/auth/login') ||
+        req.url.includes('/auth/register') ||
+        (req.url.includes('/users') && req.method === 'POST');
+
+      // Solo redirigir al login en caso de 401 para peticiones protegidas (evita cortar los modales de error en login/registro)
+      if (error.status === 401 && !isPublicAuthRequest) {
         // (1) Eliminar los datos que tengo almacenados en mi LocalStorage (token, userData)
         httpAuth.clearAuthData();
         // (2) Redireccionar

@@ -38,4 +38,39 @@
 
   </form>
 
+  <!-- Modal Dialog nativo HTML estilo SweetAlert2 para errores -->
+  <dialog #errorModal class="swal-modal">
+    <div class="swal-icon swal-icon--error">
+      <div class="swal-icon--error-x-mark">
+        <span class="swal-icon--error-line swal-icon--error-line--left"></span>
+        <span class="swal-icon--error-line swal-icon--error-line--right"></span>
+      </div>
+    </div>
+
+    <h3 class="swal-title">¡Error de Autenticación!</h3>
+    <p class="swal-text">{{ errorMessage }}</p>
+
+    <div class="swal-button-container">
+      <button type="button" class="swal-button swal-button--confirm" (click)="closeModal()">OK</button>
+    </div>
+  </dialog>
+
+  <!-- Modal Dialog nativo HTML estilo SweetAlert2 para Bienvenida -->
+  <dialog #welcomeModal class="swal-modal">
+    <div class="swal-icon swal-icon--success">
+      <div class="swal-icon--success-ring"></div>
+      <div class="swal-icon--success-line swal-icon--success-line--tip"></div>
+      <div class="swal-icon--success-line swal-icon--success-line--long"></div>
+    </div>
+
+    <h3 class="swal-title">¡Bienvenido de nuevo, {{ welcomeUser }}!</h3>
+    <p class="swal-text">Has iniciado sesión correctamente. Redirigiendo al dashboard...</p>
+
+    <div class="swal-progress-bar">
+      <div class="swal-progress-fill"></div>
+    </div>
+  </dialog>
+
 </div>
+
+
